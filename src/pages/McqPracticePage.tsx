@@ -27,20 +27,24 @@ interface McqPracticePageProps {
   navigate: (to: string) => void;
   initialClass?: 'ssc' | 'hsc';
   initialSubject?: string;
+  initialSubjectId?: string;
+  initialChapterId?: string;
 }
 
 export const McqPracticePage: React.FC<McqPracticePageProps> = ({
   navigate,
   initialClass,
-  initialSubject
+  initialSubject,
+  initialSubjectId,
+  initialChapterId
 }) => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [allMcqs, setAllMcqs] = useState<MCQ[]>([]);
 
   const [selectedClass, setSelectedClass] = useState<'all' | 'ssc' | 'hsc'>(initialClass || 'all');
-  const [selectedSubject, setSelectedSubject] = useState<string>(initialSubject || 'all');
-  const [selectedChapter, setSelectedChapter] = useState<string>('all');
+  const [selectedSubject, setSelectedSubject] = useState<string>(initialSubjectId || initialSubject || 'all');
+  const [selectedChapter, setSelectedChapter] = useState<string>(initialChapterId || 'all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
 
   // Practice state

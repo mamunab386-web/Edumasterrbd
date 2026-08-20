@@ -648,6 +648,7 @@ export const savePlatformSettings = async (settings: PlatformSettings): Promise<
 
 export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
   const subjects = await getSubjects();
+  const chapters = await getChapters();
   const notes = await getNotes();
   const mcqs = await getMCQs();
   const tests = await getModelTests();
@@ -662,13 +663,15 @@ export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
 
   return {
     ...base,
+    totalSubjects: subjects.length,
+    totalChapters: chapters.length,
     totalNotes: notes.length,
     totalPdfs: pdfs.length,
     totalMcqs: mcqs.length,
     totalTests: tests.length,
     totalBlogs: blogs.length,
-    totalDownloads: Math.max(base.totalDownloads, totalDownloads),
-    totalQuizAttempts: Math.max(base.totalQuizAttempts, totalAttempts)
+    totalDownloads: Math.max(base.totalDownloads || 0, totalDownloads),
+    totalQuizAttempts: Math.max(base.totalQuizAttempts || 0, totalAttempts)
   };
 };
 

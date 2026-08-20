@@ -12,6 +12,7 @@ import { BlogPost } from '../types';
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
+import { MarkdownRenderer } from '../components/common/MarkdownRenderer';
 import { useToast } from '../context/ToastContext';
 
 interface BlogDetailPageProps {
@@ -66,19 +67,19 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigate }
 
       {/* Header */}
       <div className="space-y-4">
-        <span className="px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300 text-xs font-bold uppercase">
+        <span className="px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 text-xs font-bold uppercase">
           {blog.category}
         </span>
 
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-950 dark:text-white leading-tight">
           {blog.title}
         </h1>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200 dark:border-slate-800 text-xs text-slate-500">
+        <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5">
               <User className="w-4 h-4 text-purple-600" />
-              <span>{blog.author}</span>
+              <span className="text-slate-900 dark:text-slate-200 font-semibold">{blog.author}</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-purple-600" />
@@ -92,7 +93,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigate }
 
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>শেয়ার</span>
@@ -112,8 +113,8 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigate }
       )}
 
       {/* Content */}
-      <article className="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200/80 dark:border-slate-800 leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-line space-y-4">
-        {blog.content}
+      <article className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-md">
+        <MarkdownRenderer content={blog.content} />
       </article>
 
       {/* Tags */}
@@ -123,7 +124,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigate }
           {blog.tags.map((t, idx) => (
             <span
               key={idx}
-              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400"
+              className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300"
             >
               #{t}
             </span>

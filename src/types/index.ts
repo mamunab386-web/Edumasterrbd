@@ -194,6 +194,8 @@ export interface UserProfile {
 }
 
 export interface AdminAnalytics {
+  totalSubjects: number;
+  totalChapters: number;
   totalNotes: number;
   totalPdfs: number;
   totalMcqs: number;

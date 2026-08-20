@@ -88,6 +88,7 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         bookmarks,
         addBookmark,
         removeBookmark,
+        clearBookmarks,
         isBookmarked,
         recentlyViewed,
         addRecentlyViewed

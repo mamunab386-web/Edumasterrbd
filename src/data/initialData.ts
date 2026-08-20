@@ -758,6 +758,8 @@ export const INITIAL_SETTINGS: PlatformSettings = {
 };
 
 export const INITIAL_ANALYTICS: AdminAnalytics = {
+  totalSubjects: 6,
+  totalChapters: 8,
   totalNotes: 24,
   totalPdfs: 18,
   totalMcqs: 140,

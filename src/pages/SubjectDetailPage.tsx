@@ -212,15 +212,15 @@ export const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({
                 onClick={() => navigate(`/notes/${note.slug || note.id}`)}
                 className="p-6 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400"
               >
-                <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
                   <span>{note.readingTimeMinutes} মিনিট পড়ার সময়</span>
-                  <span className="font-semibold text-indigo-600">{note.author}</span>
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400">{note.author}</span>
                 </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white mb-2">{note.title}</h4>
-                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-4">
+                <h4 className="text-base font-bold text-slate-950 dark:text-white mb-2">{note.title}</h4>
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed mb-4">
                   {note.summary}
                 </p>
-                <span className="text-xs font-bold text-indigo-600 flex items-center gap-1">
+                <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
                   নোট পড়ুন <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </GlassCard>

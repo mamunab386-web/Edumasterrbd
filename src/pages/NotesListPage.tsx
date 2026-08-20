@@ -19,13 +19,18 @@ import { useBookmarks } from '../context/BookmarkContext';
 interface NotesListPageProps {
   navigate: (to: string) => void;
   initialClass?: 'ssc' | 'hsc';
+  initialSubjectId?: string;
 }
 
-export const NotesListPage: React.FC<NotesListPageProps> = ({ navigate, initialClass }) => {
+export const NotesListPage: React.FC<NotesListPageProps> = ({
+  navigate,
+  initialClass,
+  initialSubjectId
+}) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [selectedClass, setSelectedClass] = useState<'all' | 'ssc' | 'hsc'>(initialClass || 'all');
-  const [selectedSubject, setSelectedSubject] = useState<string>('all');
+  const [selectedSubject, setSelectedSubject] = useState<string>(initialSubjectId || 'all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const { addBookmark, isBookmarked } = useBookmarks();
@@ -176,17 +181,17 @@ export const NotesListPage: React.FC<NotesListPageProps> = ({ navigate, initialC
                   </button>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">
+                <h3 className="text-base font-bold text-slate-950 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 mb-2">
                   {note.title}
                 </h3>
-                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed">
                   {note.summary}
                 </p>
               </div>
 
-              <div className="pt-3 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-400">{note.author}</span>
-                <span className="font-bold text-indigo-600 flex items-center gap-1">
+              <div className="pt-3 mt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">{note.author}</span>
+                <span className="font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
                   নোট পড়ুন <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>

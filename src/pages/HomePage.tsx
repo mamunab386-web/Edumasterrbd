@@ -507,17 +507,17 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
                     </button>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 mb-2">
+                  <h3 className="text-base font-bold text-slate-950 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 mb-2">
                     {note.title}
                   </h3>
 
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed">
                     {note.summary || 'সম্পূর্ণ নোট পড়তে ক্লিক করুন...'}
                   </p>
                 </div>
 
-                <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-                  <span>{note.author}</span>
+                <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
+                  <span className="font-medium">{note.author}</span>
                   <span className="font-semibold text-indigo-600 dark:text-indigo-400">
                     নোট পড়ুন &rarr;
                   </span>

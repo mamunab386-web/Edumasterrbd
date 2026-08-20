@@ -3,6 +3,8 @@ import {
   Chapter,
   Note,
   MCQ,
+  MCQSet,
+  ImportantQuestion,
   ModelTest,
   PDFResource,
   BoardQuestion,
@@ -738,6 +740,96 @@ export const INITIAL_BLOGS: BlogArticle[] = [
     readTimeMinutes: 6,
     createdAt: '2025-01-14T00:00:00.000Z',
     updatedAt: '2025-01-14T00:00:00.000Z'
+  }
+];
+
+export const INITIAL_MCQ_SETS: MCQSet[] = [
+  {
+    id: 'set-ssc-phy-motion',
+    title: 'SSC পদার্থবিজ্ঞান: গতি অধ্যায় স্পেশাল MCQ সেট',
+    description: 'গতি সমীকরণ, বেগ-ত্বরণ ও গ্রাফ বিশ্লেষণের জন্য ১৫টি গুরুত্বপূর্ণ বহুনির্বাচনী প্রশ্ন।',
+    classLevel: 'ssc',
+    subjectId: 'ssc-physics',
+    chapterId: 'ssc-phy-chap2',
+    difficulty: 'medium',
+    durationMinutes: 15,
+    totalQuestions: 4,
+    totalMarks: 4,
+    passingMarks: 3,
+    questionIds: ['mcq-ssc-phy-1', 'mcq-ssc-phy-2', 'mcq-ssc-phy-3', 'mcq-ssc-phy-4'],
+    published: true,
+    attemptsCount: 1840,
+    tags: ['SSC 2025', 'গতি', 'Motion MCQ'],
+    createdAt: '2025-01-10T00:00:00.000Z'
+  },
+  {
+    id: 'set-hsc-phy-vector',
+    title: 'HSC পদার্থবিজ্ঞান ১ম পত্র: ভেক্টর মেগা প্র্যাকটিস সেট',
+    description: 'ডট গুণন, ক্রস গুণন, নদী-নৌকা ও বৃষ্টির ছাতা সংক্রান্ত প্রিমিয়াম বহুনির্বাচনী সেট।',
+    classLevel: 'hsc',
+    subjectId: 'hsc-physics',
+    chapterId: 'hsc-phy-chap2',
+    difficulty: 'hard',
+    durationMinutes: 20,
+    totalQuestions: 4,
+    totalMarks: 4,
+    passingMarks: 3,
+    questionIds: ['mcq-hsc-phy-1', 'mcq-hsc-phy-2', 'mcq-hsc-phy-3', 'mcq-hsc-phy-4'],
+    published: true,
+    attemptsCount: 2450,
+    tags: ['HSC 2025', 'ভেক্টর', 'Vector MCQ', 'Top Grade'],
+    createdAt: '2025-01-12T00:00:00.000Z'
+  }
+];
+
+export const INITIAL_IMPORTANT_QUESTIONS: ImportantQuestion[] = [
+  {
+    id: 'iq-ssc-phy-1',
+    title: 'পরন্ত বস্তুর ৩য় সূত্রটি বিবৃতি ও গাণিতিক রূপ',
+    questionText: 'স্থির অবস্থান থেকে মুক্তভাবে পড়ন্ত বস্তু নির্দিষ্ট সময়ে যে দূরত্ব অতিক্রম করে, তা ঐ সময়ের বর্গের সমানুপাতিক ($h \\propto t^2$)—ব্যাখ্যা কর।',
+    answerText: 'গ্যালিলিওর তৃতীয় সূত্রানুসারে, স্থির অবস্থান হতে বিনা বাধায় পড়ন্ত কোনো বস্তু $t$ সময়ে $h$ দূরত্ব অতিক্রম করলে, $h \\propto t^2$। এর অর্থ সময় দ্বিগুণ হলে অতিক্রান্ত দূরত্ব ৪ গুণ এবং সময় ৩ গুণ হলে অতিক্রান্ত দূরত্ব ৯ গুণ হবে।',
+    classLevel: 'ssc',
+    subjectId: 'ssc-physics',
+    chapterId: 'ssc-phy-chap2',
+    category: 'অনুধাবনমূলক (Comprehension)',
+    board: 'ঢাকা বোর্ড',
+    year: 2024,
+    importantRating: 5,
+    tags: ['পড়ন্ত বস্তু', 'গ্যালিলিও', 'বোর্ড ক/খ'],
+    published: true,
+    createdAt: '2025-01-10T00:00:00.000Z'
+  },
+  {
+    id: 'iq-hsc-phy-vector-1',
+    title: 'নৌকার গুণ টানার ক্ষেত্রে অনুভূমিক উপাংশের ভূমিকা',
+    questionText: 'নৌকার গুণ যত লম্বা করা হয়, নৌকা তত দ্রুত সামনে এগিয়ে যায় কেন? ভেক্টরের বিভাজনের সাহায্যে ব্যাখ্যা কর।',
+    answerText: 'গুণ টানার বল $F$ কে দুটি লম্ব উপাংশে ভাগ করা যায়: ১. অনুভূমিক উপাংশ $F\\cos\\theta$ যা নৌকাকে সামনের দিকে টানে। ২. উলম্ব উপাংশ $F\\sin\\theta$ যা নৌকাকে পাড়ের দিকে টানে (হাল দিয়ে নিষ্ক্রিয় করা হয়)। গুণ লম্বা হলে কোণ $\\theta$ হ্রাস পায়, ফলে $\\cos\\theta$ বৃদ্ধি পেয়ে সম্মুখমুখী বল $F\\cos\\theta$ সর্বোচ্চ হয় এবং নৌকা দ্রুত সামনে চলে।',
+    classLevel: 'hsc',
+    subjectId: 'hsc-physics',
+    chapterId: 'hsc-phy-chap2',
+    category: 'অনুধাবনমূলক (Comprehension)',
+    board: 'সকল বোর্ড স্পেশাল',
+    year: 2024,
+    importantRating: 5,
+    tags: ['ভেক্টর বিভাজন', 'নৌকার গুণ', 'HSC Physics'],
+    published: true,
+    createdAt: '2025-01-12T00:00:00.000Z'
+  },
+  {
+    id: 'iq-ssc-chem-periodic',
+    title: 'পর্যায় সারণিতে পারমাণবিক ব্যাসার্ধ কীভাবে পরিবর্তিত হয়?',
+    questionText: 'একই পর্যায়ের বাম থেকে ডানে গেলে এবং একই গ্রুপের উপর থেকে নিচে নামলে পারমাণবিক ব্যাসার্ধের পরিবর্তনের কারণ ব্যাখ্যা কর।',
+    answerText: '১. একই পর্যায়ে বাম থেকে ডানে গেলে নতুন কোনো শক্তিস্তর যুক্ত হয় না কিন্তু নিউক্লিয়াসে প্রোটন সংখ্যা বৃদ্ধি পায়, ফলে ইলেকট্রনের প্রতি আকর্ষণ বেড়ে পারমাণবিক ব্যাসার্ধ হ্রাস পায়। ২. একই গ্রুপে উপর থেকে নিচে নামলে প্রতি ধাপে নতুন একটি করে প্রধান শক্তিস্তর যুক্ত হয়, ফলে কার্যকর নিউক্লিয়ার চার্জের চেয়ে শক্তিস্তরের প্রভাব বেশি হওয়ায় পারমাণবিক ব্যাসার্ধ বৃদ্ধি পায়।',
+    classLevel: 'ssc',
+    subjectId: 'ssc-chemistry',
+    chapterId: 'ssc-chem-chap4',
+    category: 'জ্ঞানমূলক (Knowledge)',
+    board: 'রাজশাহী বোর্ড',
+    year: 2023,
+    importantRating: 4,
+    tags: ['পর্যায় সারণি', 'পারমাণবিক ব্যাসার্ধ'],
+    published: true,
+    createdAt: '2025-01-14T00:00:00.000Z'
   }
 ];
 

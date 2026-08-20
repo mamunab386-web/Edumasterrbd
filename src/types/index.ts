@@ -56,6 +56,7 @@ export interface Note {
   authorRole?: string;
   thumbnailUrl?: string;
   featured?: boolean;
+  isPremium?: boolean;
   published: boolean;
   views?: number;
   readingTimeMinutes: number;
@@ -78,6 +79,54 @@ export interface MCQ {
   boardRef?: string; // e.g. "ঢাকা বোর্ড ২০২৩"
   tags?: string[];
   createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface MCQSet {
+  id: string;
+  title: string;
+  description?: string;
+  classLevel: 'ssc' | 'hsc';
+  subjectId: string;
+  chapterId?: string;
+  difficulty: MCQDifficulty;
+  durationMinutes: number;
+  totalQuestions: number;
+  totalMarks: number;
+  passingMarks: number;
+  questionIds: string[];
+  questions?: MCQ[];
+  published: boolean;
+  attemptsCount?: number;
+  tags?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type QuestionCategory =
+  | 'জ্ঞানমূলক (Knowledge)'
+  | 'অনুধাবনমূলক (Comprehension)'
+  | 'প্রয়োগমূলক (Application)'
+  | 'উচ্চতর দক্ষতা (Higher Ability)'
+  | 'CQ সৃজনশীল'
+  | 'সাজেশন';
+
+export interface ImportantQuestion {
+  id: string;
+  title: string;
+  questionText: string;
+  answerText: string;
+  classLevel: 'ssc' | 'hsc';
+  subjectId: string;
+  chapterId?: string;
+  category: QuestionCategory;
+  board?: string;
+  year?: number;
+  importantRating?: number; // 1 to 5 stars
+  tags?: string[];
+  published: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ModelTest {
@@ -87,6 +136,7 @@ export interface ModelTest {
   classLevel: 'ssc' | 'hsc';
   subjectId: string;
   chapterId?: string;
+  board?: string;
   durationMinutes: number;
   totalMarks: number;
   passingMarks: number;
@@ -95,6 +145,7 @@ export interface ModelTest {
   published: boolean;
   attemptsCount?: number;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface TestResult {
@@ -103,8 +154,8 @@ export interface TestResult {
   testTitle: string;
   classLevel: 'ssc' | 'hsc';
   subjectId: string;
-  userId?: string;
-  userName?: string;
+  userId: string;
+  userName: string;
   totalQuestions: number;
   correctAnswers: number;
   wrongAnswers: number;
@@ -113,7 +164,7 @@ export interface TestResult {
   totalMarks: number;
   percentage: number;
   passed: boolean;
-  userAnswers: Record<string, number>; // mcqId -> selectedIndex
+  userAnswers: Record<string, number>;
   timeTakenSeconds: number;
   completedAt: string;
 }
@@ -133,8 +184,48 @@ export interface PDFResource {
   viewCount?: number;
   tags?: string[];
   published: boolean;
+  content?: string; // Rich PDF content ready for print/export
+  author?: string;
+  featured?: boolean;
   uploadedAt?: string;
   createdAt?: string;
+  updatedAt?: string;
+}
+
+export type ContentGeneratorType =
+  | 'hand_note'
+  | 'short_note'
+  | 'revision_note'
+  | 'formula_sheet'
+  | 'mcq'
+  | 'mcq_set'
+  | 'model_test'
+  | 'important_questions';
+
+export interface GeneratedContentPayload {
+  classLevel: 'ssc' | 'hsc';
+  subjectId: string;
+  chapterId?: string;
+  contentType: ContentGeneratorType;
+  difficulty: MCQDifficulty;
+  mcqCount: number;
+  language: 'bangla' | 'english' | 'both';
+  customTopicOrTitle?: string;
+  academicYear?: number;
+  board?: string;
+}
+
+export interface GeneratedContentResult {
+  title: string;
+  contentType: ContentGeneratorType;
+  content: string; // Markdown or formatted text
+  summary?: string;
+  learningObjectives?: string[];
+  keyPoints?: string[];
+  mcqs?: Partial<MCQ>[];
+  importantQuestions?: Partial<ImportantQuestion>[];
+  formulas?: { name: string; formula: string; note: string }[];
+  tags?: string[];
 }
 
 export interface BoardQuestion {

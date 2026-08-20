@@ -3,6 +3,8 @@ import {
   Chapter,
   Note,
   MCQ,
+  MCQSet,
+  ImportantQuestion,
   ModelTest,
   TestResult,
   PDFResource,
@@ -16,6 +18,8 @@ import {
   INITIAL_CHAPTERS,
   INITIAL_NOTES,
   INITIAL_MCQS,
+  INITIAL_MCQ_SETS,
+  INITIAL_IMPORTANT_QUESTIONS,
   INITIAL_TESTS,
   INITIAL_PDFS,
   INITIAL_BOARD_QUESTIONS,
@@ -41,6 +45,8 @@ const STORAGE_KEYS = {
   CHAPTERS: 'edumaster_chapters_v1',
   NOTES: 'edumaster_notes_v1',
   MCQS: 'edumaster_mcqs_v1',
+  MCQ_SETS: 'edumaster_mcq_sets_v1',
+  IMPORTANT_QUESTIONS: 'edumaster_important_questions_v1',
   TESTS: 'edumaster_tests_v1',
   TEST_RESULTS: 'edumaster_test_results_v1',
   PDFS: 'edumaster_pdfs_v1',
@@ -49,7 +55,8 @@ const STORAGE_KEYS = {
   SETTINGS: 'edumaster_settings_v1',
   ANALYTICS: 'edumaster_analytics_v1',
   BOOKMARKS: 'edumaster_bookmarks_v1',
-  VIEW_HISTORY: 'edumaster_view_history_v1'
+  VIEW_HISTORY: 'edumaster_view_history_v1',
+  AUTOSAVE_PREFIX: 'edumaster_draft_'
 };
 
 function getLocal<T>(key: string, defaultVal: T): T {
@@ -314,6 +321,130 @@ export const deleteMCQ = async (mcqId: string): Promise<void> => {
       await deleteDoc(doc(db, 'mcqs', mcqId));
     } catch (e) {
       console.error('Firestore deleteMCQ error:', e);
+    }
+  }
+};
+
+// ----------------- MCQ SETS -----------------
+export const getMCQSets = async (): Promise<MCQSet[]> => {
+  if (isFirebaseConfigured && db) {
+    try {
+      const snap = await getDocs(collection(db, 'mcqSets'));
+      if (!snap.empty) {
+        return snap.docs.map((d) => d.data() as MCQSet);
+      }
+    } catch (e) {
+      console.warn('Firestore fallback for mcqSets:', e);
+    }
+  }
+  return getLocal<MCQSet[]>(STORAGE_KEYS.MCQ_SETS, INITIAL_MCQ_SETS);
+};
+
+export const getMCQSetById = async (setId: string): Promise<MCQSet | undefined> => {
+  const sets = await getMCQSets();
+  const found = sets.find((s) => s.id === setId);
+  if (!found) return undefined;
+
+  const allMcqs = await getMCQs();
+  const questions = (found.questionIds || [])
+    .map((qid) => allMcqs.find((m) => m.id === qid))
+    .filter(Boolean) as MCQ[];
+
+  return { ...found, questions };
+};
+
+export const saveMCQSet = async (set: MCQSet): Promise<MCQSet> => {
+  const current = getLocal<MCQSet[]>(STORAGE_KEYS.MCQ_SETS, INITIAL_MCQ_SETS);
+  const index = current.findIndex((s) => s.id === set.id);
+  let updated: MCQSet[];
+  if (index >= 0) {
+    updated = [...current];
+    updated[index] = { ...set, updatedAt: new Date().toISOString() };
+  } else {
+    updated = [...current, { ...set, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }];
+  }
+  setLocal(STORAGE_KEYS.MCQ_SETS, updated);
+
+  if (isFirebaseConfigured && db) {
+    try {
+      await setDoc(doc(db, 'mcqSets', set.id), set);
+    } catch (e) {
+      console.error('Firestore saveMCQSet error:', e);
+    }
+  }
+  return set;
+};
+
+export const deleteMCQSet = async (setId: string): Promise<void> => {
+  const current = getLocal<MCQSet[]>(STORAGE_KEYS.MCQ_SETS, INITIAL_MCQ_SETS);
+  setLocal(
+    STORAGE_KEYS.MCQ_SETS,
+    current.filter((s) => s.id !== setId)
+  );
+
+  if (isFirebaseConfigured && db) {
+    try {
+      await deleteDoc(doc(db, 'mcqSets', setId));
+    } catch (e) {
+      console.error('Firestore deleteMCQSet error:', e);
+    }
+  }
+};
+
+// ----------------- IMPORTANT QUESTIONS -----------------
+export const getImportantQuestions = async (): Promise<ImportantQuestion[]> => {
+  if (isFirebaseConfigured && db) {
+    try {
+      const snap = await getDocs(collection(db, 'importantQuestions'));
+      if (!snap.empty) {
+        return snap.docs.map((d) => d.data() as ImportantQuestion);
+      }
+    } catch (e) {
+      console.warn('Firestore fallback for importantQuestions:', e);
+    }
+  }
+  return getLocal<ImportantQuestion[]>(STORAGE_KEYS.IMPORTANT_QUESTIONS, INITIAL_IMPORTANT_QUESTIONS);
+};
+
+export const getImportantQuestionById = async (id: string): Promise<ImportantQuestion | undefined> => {
+  const list = await getImportantQuestions();
+  return list.find((q) => q.id === id);
+};
+
+export const saveImportantQuestion = async (iq: ImportantQuestion): Promise<ImportantQuestion> => {
+  const current = getLocal<ImportantQuestion[]>(STORAGE_KEYS.IMPORTANT_QUESTIONS, INITIAL_IMPORTANT_QUESTIONS);
+  const index = current.findIndex((q) => q.id === iq.id);
+  let updated: ImportantQuestion[];
+  if (index >= 0) {
+    updated = [...current];
+    updated[index] = { ...iq, updatedAt: new Date().toISOString() };
+  } else {
+    updated = [...current, { ...iq, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }];
+  }
+  setLocal(STORAGE_KEYS.IMPORTANT_QUESTIONS, updated);
+
+  if (isFirebaseConfigured && db) {
+    try {
+      await setDoc(doc(db, 'importantQuestions', iq.id), iq);
+    } catch (e) {
+      console.error('Firestore saveImportantQuestion error:', e);
+    }
+  }
+  return iq;
+};
+
+export const deleteImportantQuestion = async (id: string): Promise<void> => {
+  const current = getLocal<ImportantQuestion[]>(STORAGE_KEYS.IMPORTANT_QUESTIONS, INITIAL_IMPORTANT_QUESTIONS);
+  setLocal(
+    STORAGE_KEYS.IMPORTANT_QUESTIONS,
+    current.filter((q) => q.id !== id)
+  );
+
+  if (isFirebaseConfigured && db) {
+    try {
+      await deleteDoc(doc(db, 'importantQuestions', id));
+    } catch (e) {
+      console.error('Firestore deleteImportantQuestion error:', e);
     }
   }
 };
@@ -675,12 +806,210 @@ export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
   };
 };
 
+// ----------------- DUPLICATE PROTECTION -----------------
+export const checkDuplicateContent = async (
+  type: 'note' | 'mcq' | 'test' | 'pdf' | 'importantQuestion',
+  titleOrQuestion: string,
+  slugOrOptions?: string,
+  excludeId?: string
+): Promise<{ isDuplicate: boolean; matchedTitle?: string; reason?: string }> => {
+  const normTitle = (titleOrQuestion || '').trim().toLowerCase();
+
+  if (type === 'note') {
+    const notes = await getNotes();
+    const match = notes.find(
+      (n) =>
+        n.id !== excludeId &&
+        (n.title.trim().toLowerCase() === normTitle ||
+          (slugOrOptions && n.slug.trim().toLowerCase() === slugOrOptions.trim().toLowerCase()))
+    );
+    if (match) {
+      return {
+        isDuplicate: true,
+        matchedTitle: match.title,
+        reason: `অনুরূপ শিরোনাম বা স্লাগ বিশিষ্ট হ্যান্ডনোট ইতিমধ্যে বিদ্যমান (${match.title})`
+      };
+    }
+  }
+
+  if (type === 'mcq') {
+    const mcqs = await getMCQs();
+    const match = mcqs.find(
+      (m) => m.id !== excludeId && m.question.trim().toLowerCase() === normTitle
+    );
+    if (match) {
+      return {
+        isDuplicate: true,
+        matchedTitle: match.question,
+        reason: `একই প্রশ্ন ইতিমধ্যে প্রশ্ন ব্যাংকে বিদ্যমান`
+      };
+    }
+  }
+
+  if (type === 'pdf') {
+    const pdfs = await getPDFs();
+    const match = pdfs.find(
+      (p) => p.id !== excludeId && p.title.trim().toLowerCase() === normTitle
+    );
+    if (match) {
+      return {
+        isDuplicate: true,
+        matchedTitle: match.title,
+        reason: `একই নামের PDF ডকুমেন্টস ইতিমধ্যে রয়েছে`
+      };
+    }
+  }
+
+  if (type === 'importantQuestion') {
+    const iqs = await getImportantQuestions();
+    const match = iqs.find(
+      (q) => q.id !== excludeId && q.questionText.trim().toLowerCase() === normTitle
+    );
+    if (match) {
+      return {
+        isDuplicate: true,
+        matchedTitle: match.title,
+        reason: `একই ধরণের গুরুত্বপূর্ণ প্রশ্ন ইতিমধ্যে সংরক্ষিত রয়েছে`
+      };
+    }
+  }
+
+  return { isDuplicate: false };
+};
+
+// ----------------- DRAFT AUTOSAVE -----------------
+export const saveDraftLocally = (draftKey: string, data: any): void => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.AUTOSAVE_PREFIX + draftKey, JSON.stringify({
+      data,
+      savedAt: new Date().toISOString()
+    }));
+  } catch (e) {
+    console.warn('Draft autosave failed:', e);
+  }
+};
+
+export const getDraftLocally = <T>(draftKey: string): { data: T; savedAt: string } | null => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.AUTOSAVE_PREFIX + draftKey);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    return null;
+  }
+};
+
+export const clearDraftLocally = (draftKey: string): void => {
+  try {
+    localStorage.removeItem(STORAGE_KEYS.AUTOSAVE_PREFIX + draftKey);
+  } catch (e) {
+    console.warn('Clear draft failed:', e);
+  }
+};
+
+// ----------------- EXPORT & IMPORT -----------------
+export const exportDatabaseAsJSON = async (): Promise<string> => {
+  const [
+    subjects,
+    chapters,
+    notes,
+    mcqs,
+    mcqSets,
+    importantQuestions,
+    tests,
+    pdfs,
+    boardQuestions,
+    blogs,
+    settings
+  ] = await Promise.all([
+    getSubjects(),
+    getChapters(),
+    getNotes(),
+    getMCQs(),
+    getMCQSets(),
+    getImportantQuestions(),
+    getModelTests(),
+    getPDFs(),
+    getBoardQuestions(),
+    getBlogs(),
+    getPlatformSettings()
+  ]);
+
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    platform: 'EduMaster BD',
+    version: '2.0',
+    data: {
+      subjects,
+      chapters,
+      notes,
+      mcqs,
+      mcqSets,
+      importantQuestions,
+      tests,
+      pdfs,
+      boardQuestions,
+      blogs,
+      settings
+    }
+  };
+
+  return JSON.stringify(payload, null, 2);
+};
+
+export const exportMCQsAsCSV = (mcqs: MCQ[]): string => {
+  const headers = ['Question', 'OptionA', 'OptionB', 'OptionC', 'OptionD', 'CorrectAnswer', 'Explanation', 'Difficulty', 'ClassLevel', 'BoardRef'];
+  const rows = mcqs.map((m) => {
+    const opts = m.options || ['', '', '', ''];
+    const ansLetter = ['A', 'B', 'C', 'D'][m.correctAnswer] || 'A';
+    const clean = (s: string) => `"${(s || '').replace(/"/g, '""')}"`;
+    return [
+      clean(m.question),
+      clean(opts[0] || ''),
+      clean(opts[1] || ''),
+      clean(opts[2] || ''),
+      clean(opts[3] || ''),
+      clean(ansLetter),
+      clean(m.explanation || ''),
+      clean(m.difficulty || 'medium'),
+      clean(m.classLevel || 'ssc'),
+      clean(m.boardRef || '')
+    ].join(',');
+  });
+
+  return [headers.join(','), ...rows].join('\n');
+};
+
+export const importDatabaseFromJSON = async (jsonString: string): Promise<boolean> => {
+  try {
+    const parsed = JSON.parse(jsonString);
+    const d = parsed.data || parsed;
+    if (d.subjects) setLocal(STORAGE_KEYS.SUBJECTS, d.subjects);
+    if (d.chapters) setLocal(STORAGE_KEYS.CHAPTERS, d.chapters);
+    if (d.notes) setLocal(STORAGE_KEYS.NOTES, d.notes);
+    if (d.mcqs) setLocal(STORAGE_KEYS.MCQS, d.mcqs);
+    if (d.mcqSets) setLocal(STORAGE_KEYS.MCQ_SETS, d.mcqSets);
+    if (d.importantQuestions) setLocal(STORAGE_KEYS.IMPORTANT_QUESTIONS, d.importantQuestions);
+    if (d.tests) setLocal(STORAGE_KEYS.TESTS, d.tests);
+    if (d.pdfs) setLocal(STORAGE_KEYS.PDFS, d.pdfs);
+    if (d.boardQuestions) setLocal(STORAGE_KEYS.BOARD_QUESTIONS, d.boardQuestions);
+    if (d.blogs) setLocal(STORAGE_KEYS.BLOGS, d.blogs);
+    if (d.settings) setLocal(STORAGE_KEYS.SETTINGS, d.settings);
+    return true;
+  } catch (e) {
+    console.error('Import database failed:', e);
+    return false;
+  }
+};
+
 // Reset to sample data
 export const resetToSampleData = (): void => {
   setLocal(STORAGE_KEYS.SUBJECTS, INITIAL_SUBJECTS);
   setLocal(STORAGE_KEYS.CHAPTERS, INITIAL_CHAPTERS);
   setLocal(STORAGE_KEYS.NOTES, INITIAL_NOTES);
   setLocal(STORAGE_KEYS.MCQS, INITIAL_MCQS);
+  setLocal(STORAGE_KEYS.MCQ_SETS, INITIAL_MCQ_SETS);
+  setLocal(STORAGE_KEYS.IMPORTANT_QUESTIONS, INITIAL_IMPORTANT_QUESTIONS);
   setLocal(STORAGE_KEYS.TESTS, INITIAL_TESTS);
   setLocal(STORAGE_KEYS.PDFS, INITIAL_PDFS);
   setLocal(STORAGE_KEYS.BOARD_QUESTIONS, INITIAL_BOARD_QUESTIONS);
@@ -693,3 +1022,4 @@ export const resetToDemoData = resetToSampleData;
 export const getBlogBySlug = getBlogBySlugOrId;
 export const getNoteBySlug = getNoteByIdOrSlug;
 export const incrementPdfDownloads = incrementPDFDownloads;
+

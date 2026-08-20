@@ -32,14 +32,22 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const { user, logout } = useAuth();
 
   const menuItems = [
-    { id: 'dashboard', label: 'ড্যাশবোর্ড', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'ড্যাশবোর্ড (Overview)', icon: LayoutDashboard },
+    {
+      id: 'generator',
+      label: 'AI কারিকুলাম জেনারেটর',
+      icon: Sparkles,
+      badge: 'PRO'
+    },
+    { id: 'notes', label: 'হ্যান্ডনোট (Hand Notes)', icon: FileText },
+    { id: 'pdf-notes', label: 'PDF হ্যান্ডনোট ও মেকার', icon: Download },
+    { id: 'mcqs', label: 'MCQ প্রশ্ন ব্যাংক', icon: Zap },
+    { id: 'mcq-sets', label: 'MCQ সেট ও প্যাকেজ', icon: Zap },
+    { id: 'tests', label: 'মডেল টেস্ট (Model Tests)', icon: Sparkles },
+    { id: 'important-questions', label: 'গুরুত্বপূর্ণ প্রশ্ন ও CQ', icon: FileCheck2 },
+    { id: 'board', label: 'বোর্ড প্রশ্ন আর্কাইভ', icon: FileCheck2 },
     { id: 'subjects', label: 'বিষয়সমূহ (Subjects)', icon: Layers },
     { id: 'chapters', label: 'অধ্যায়সমূহ (Chapters)', icon: BookOpen },
-    { id: 'notes', label: 'হ্যান্ডনোট (Notes)', icon: FileText },
-    { id: 'mcqs', label: 'MCQ প্রশ্ন ব্যাংক', icon: Zap },
-    { id: 'tests', label: 'মডেল টেস্ট (Tests)', icon: Sparkles },
-    { id: 'pdfs', label: 'PDF লাইব্রেরি', icon: Download },
-    { id: 'board', label: 'বোর্ড প্রশ্ন আর্কাইভ', icon: FileCheck2 },
     { id: 'blogs', label: 'ব্লগ ও গাইডলাইন', icon: BookOpen },
     { id: 'settings', label: 'সেটিংস ও ডেটাবেজ', icon: Settings }
   ];
@@ -101,10 +109,21 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
+                    <Icon className={`w-4 h-4 ${item.id === 'generator' && !isActive ? 'text-amber-500' : ''}`} />
+                    <span className="truncate">{item.label}</span>
                   </div>
-                  {isActive && <ChevronRight className="w-4 h-4" />}
+                  <div className="flex items-center gap-1.5">
+                    {(item as any).badge && (
+                      <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md ${
+                        isActive
+                          ? 'bg-white text-indigo-700'
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300'
+                      }`}>
+                        {(item as any).badge}
+                      </span>
+                    )}
+                    {isActive && <ChevronRight className="w-4 h-4" />}
+                  </div>
                 </button>
               );
             })}

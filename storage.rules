@@ -1,0 +1,39 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper to check admin status
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email in ['admin@edumasterbd.com', 'mamunab386@gmail.com']
+      );
+    }
+
+    // Public readable assets, upload only for admins
+    match /pdfs/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 50 * 1024 * 1024 // 50MB max
+                   && request.resource.contentType.matches('application/pdf');
+    }
+
+    match /thumbnails/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 5 * 1024 * 1024 // 5MB max
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    match /blogs/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    match /notes/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 10 * 1024 * 1024;
+    }
+  }
+}

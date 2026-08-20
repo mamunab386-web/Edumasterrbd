@@ -1,0 +1,6 @@
+{
+  "name": "EduMaster BD",
+  "description": "বাংলাদেশের শিক্ষার্থীদের জন্য স্মার্ট ও ফ্রি SSC & HSC লার্নিং প্ল্যাটফর্ম - Notes, MCQ, Model Test, Board Questions ও PDF Resources",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -12,6 +12,7 @@ import { getBlogs } from '../services/dataService';
 import { BlogPost } from '../types';
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface BlogListPageProps {
   navigate: (to: string) => void;
@@ -38,6 +39,20 @@ export const BlogListPage: React.FC<BlogListPageProps> = ({ navigate }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title="SSC ও HSC পরীক্ষার স্ট্র্যাটেজি ও স্টাডি ব্লগ | EduMaster BD"
+        description="এসএসসি ও এইচএসসি পরীক্ষায় জিপিএ ৫ পাওয়ার রুটিন, সময় ব্যবস্থাপনা, বোর্ড পরীক্ষার শেষ মুহূর্তের রিভিশন কৌশল ও গুরুত্বপূর্ণ টিপস।"
+        keywords={[
+          'SSC Study Tips',
+          'HSC Study Strategy',
+          'GPA 5 routine Bangladesh',
+          'Exam preparation tips',
+          'EduMaster Blog'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/blog"
+        breadcrumbs={[{ name: 'ব্লগ ও গাইডলাইন', url: '/blog' }]}
+      />
+
       <Breadcrumbs items={[{ label: 'ব্লগ ও গাইডলাইন' }]} navigate={navigate} />
 
       {/* Header */}

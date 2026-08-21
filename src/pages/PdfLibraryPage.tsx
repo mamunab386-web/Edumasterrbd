@@ -16,6 +16,7 @@ import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
 import { useToast } from '../context/ToastContext';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface PdfLibraryPageProps {
   pdfId?: string;
@@ -64,6 +65,41 @@ export const PdfLibraryPage: React.FC<PdfLibraryPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title={
+          selectedPdf
+            ? `${selectedPdf.title} PDF Download | EduMaster BD`
+            : "SSC ও HSC সকল বিষয়ের ফ্রি PDF হ্যান্ডনোট ও শিট ডাউনলোড | EduMaster BD"
+        }
+        description={
+          selectedPdf
+            ? selectedPdf.description
+            : "এসএসসি ও এইচএসসি পরীক্ষার পদার্থ, রসায়ন, গণিত ও ICT এর অধ্যায়ভিত্তিক শর্টকাট শিট, ফর্মুলা গাইড এবং পূর্ণাঙ্গ সমাধান PDF ফ্রিতে ডাউনলোড করুন।"
+        }
+        keywords={[
+          'SSC PDF Download',
+          'HSC Formula Sheet PDF',
+          'Free Handnote PDF',
+          'Bangla Educational PDF',
+          'Board Question PDF'
+        ]}
+        canonicalUrl={
+          selectedPdf
+            ? `https://edumasterbd.vercel.app/pdf/${selectedPdf.id}`
+            : "https://edumasterbd.vercel.app/pdf"
+        }
+        breadcrumbs={[
+          { name: 'PDF লাইব্রেরি', url: '/pdf' },
+          ...(selectedPdf ? [{ name: selectedPdf.title, url: `/pdf/${selectedPdf.id}` }] : [])
+        ]}
+        faqs={[
+          {
+            question: 'পিডিএফ ডাউনলোড করতে কি কোনো ফি বা রেজিস্ট্রেশন প্রয়োজন?',
+            answer: 'না, EduMaster BD-র সমস্ত PDF রিসোর্স ও হ্যান্ডনোট সম্পূর্ণ বিনামূল্যে সরাসরি ডাউনলোড করা যায়।'
+          }
+        ]}
+      />
+
       <Breadcrumbs items={[{ label: 'PDF রিসোর্স লাইব্রেরি' }]} navigate={navigate} />
 
       {/* Header */}

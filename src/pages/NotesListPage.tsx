@@ -15,6 +15,7 @@ import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
 import { useBookmarks } from '../context/BookmarkContext';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface NotesListPageProps {
   navigate: (to: string) => void;
@@ -55,6 +56,37 @@ export const NotesListPage: React.FC<NotesListPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title="SSC ও HSC সকল বিষয়ের অধ্যায়ভিত্তিক হ্যান্ডনোট ও শর্টকাট | EduMaster BD"
+        description="পদার্থবিজ্ঞান, রসায়ন, গণিত ও ICT সহ SSC ও HSC এর সকল বিষয়ের অধ্যায়ভিত্তিক স্পেশাল হ্যান্ডনোট, সূত্র ও সামারি ফ্রিতে পড়ুন।"
+        keywords={[
+          'SSC Handnotes',
+          'HSC Handnotes',
+          'Bangla study notes',
+          'Physics formula sheet',
+          'Chemistry short note',
+          'Higher math formulas'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/notes"
+        breadcrumbs={[{ name: 'হ্যান্ডনোট লাইব্রেরি', url: '/notes' }]}
+        courseData={{
+          name: 'SSC & HSC Free Study Notes Repository',
+          description: 'Access curated study notes, summaries, and formula sheets for SSC and HSC students in Bangladesh.',
+          provider: 'EduMaster BD',
+          educationalLevel: 'Secondary and Higher Secondary'
+        }}
+        faqs={[
+          {
+            question: 'হ্যান্ডনোটগুলো কি অফলাইনে পড়া যাবে?',
+            answer: 'হ্যাঁ, আপনি প্রতিটি নোট ব্রাউজারে বুকমার্ক করে রাখতে পারেন এবং প্রিন্ট বা PDF ডাউনলোড করার সুবিধাও রয়েছে।'
+          },
+          {
+            question: 'নোটগুলোতে কি বিগত বছরের বোর্ড প্রশ্নের সমাধান আছে?',
+            answer: 'হ্যাঁ, প্রতিটি নোটে বোর্ড পরীক্ষায় আসা বহুনির্বাচনী ও সৃজনশীল প্রশ্নের শর্টকাট টেকনিক ও থিওরি সংকলিত রয়েছে।'
+          }
+        ]}
+      />
+
       <Breadcrumbs items={[{ label: 'অধ্যায়ভিত্তিক হ্যান্ডনোট' }]} navigate={navigate} />
 
       {/* Header */}

@@ -27,6 +27,7 @@ import { MarkdownRenderer } from '../components/common/MarkdownRenderer';
 import { useBookmarks } from '../context/BookmarkContext';
 import { useToast } from '../context/ToastContext';
 import { AdBanner } from '../components/common/AdBanner';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface NoteDetailPageProps {
   slug: string;
@@ -88,6 +89,36 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({ slug, navigate }
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 print:p-0">
+      <SEOHead
+        title={`${note.title} | ${note.classLevel.toUpperCase()} Note`}
+        description={note.summary || `${note.title} — ${note.classLevel.toUpperCase()} শিক্ষার্থীদের জন্য হ্যান্ডনোট ও পূর্ণাঙ্গ গাইডলাইন।`}
+        keywords={[
+          ...note.tags,
+          `${note.classLevel.toUpperCase()} Handnote`,
+          'Bangla study note',
+          subject ? subject.banglaName : 'Education'
+        ]}
+        canonicalUrl={`https://edumasterbd.vercel.app/notes/${note.slug}`}
+        ogType="article"
+        ogImage={note.thumbnailUrl}
+        publishedTime={note.createdAt}
+        modifiedTime={note.updatedAt || note.createdAt}
+        author={note.author}
+        breadcrumbs={[
+          { name: `${note.classLevel.toUpperCase()} নোটস`, url: '/notes' },
+          { name: note.title, url: `/notes/${note.slug}` }
+        ]}
+        articleData={{
+          headline: note.title,
+          description: note.summary || note.title,
+          image: note.thumbnailUrl || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&h=630&q=80',
+          datePublished: note.createdAt,
+          dateModified: note.updatedAt || note.createdAt,
+          authorName: note.author,
+          section: `${note.classLevel.toUpperCase()} Education`
+        }}
+      />
+
       <div className="print:hidden">
         <Breadcrumbs
           items={[

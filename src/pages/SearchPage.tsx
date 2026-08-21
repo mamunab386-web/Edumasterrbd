@@ -82,6 +82,13 @@ export const SearchPage: React.FC<SearchPageProps> = ({ initialQuery = '', navig
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title={query ? `"${query}" এর সার্চ ফলাফল | EduMaster BD` : "সকল নোট ও রিসোর্স সার্চ করুন | EduMaster BD"}
+        description="EduMaster BD স্মার্ট সার্চের মাধ্যমে যেকোনো এসএসসি ও এইচএসসি নোট, অধ্যায়, সূত্র, বহুনির্বাচনী প্রশ্ন বা মডেল টেস্ট সহজেই খুঁজে নিন।"
+        canonicalUrl="https://edumasterbd.vercel.app/search"
+        breadcrumbs={[{ name: 'সার্চ', url: '/search' }]}
+      />
+
       <Breadcrumbs items={[{ label: 'গ্লোবাল সার্চ' }]} navigate={navigate} />
 
       {/* Search Input Box */}

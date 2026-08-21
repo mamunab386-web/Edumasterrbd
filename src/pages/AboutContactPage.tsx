@@ -14,6 +14,7 @@ import {
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { useToast } from '../context/ToastContext';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface AboutContactPageProps {
   navigate: (to: string) => void;
@@ -37,6 +38,19 @@ export const AboutContactPage: React.FC<AboutContactPageProps> = ({ navigate }) 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      <SEOHead
+        title="আমাদের পরিচিতি ও যোগাযোগ | EduMaster BD"
+        description="EduMaster BD সম্পর্কে জানুন — বাংলাদেশের এসএসসি ও এইচএসসি পরীক্ষার্থীদের জন্য সম্পূর্ণ ফ্রি স্টাডি রিসোর্স প্ল্যাটফর্ম। যোগাযোগ করুন যেকোনো পরামর্শ বা তথ্যের জন্য।"
+        keywords={[
+          'About EduMaster BD',
+          'Contact EduMaster BD',
+          'SSC HSC study portal Bangladesh',
+          'Free education initiative'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/about"
+        breadcrumbs={[{ name: 'আমাদের পরিচিতি ও যোগাযোগ', url: '/about' }]}
+      />
+
       <Breadcrumbs items={[{ label: 'আমাদের পরিচিতি ও যোগাযোগ' }]} navigate={navigate} />
 
       {/* Hero */}

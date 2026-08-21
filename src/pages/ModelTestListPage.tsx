@@ -14,6 +14,7 @@ import { ModelTest, Subject } from '../types';
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface ModelTestListPageProps {
   navigate: (to: string) => void;
@@ -46,6 +47,25 @@ export const ModelTestListPage: React.FC<ModelTestListPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title="SSC ও HSC অনলাইন লাইভ মডেল টেস্ট ও মেধা তালিকা | EduMaster BD"
+        description="বোর্ড পরীক্ষার অনুরূপ টাইমড মডেল টেস্ট দিন, নেগেটিভ মার্কিং সহ তাৎক্ষণিক ফলাফল ও বিস্তারিত সমাধান দেখে প্রস্তুতি যাচাই করুন।"
+        keywords={[
+          'Online Model Test Bangladesh',
+          'SSC Model Test 2025',
+          'HSC Model Test 2025',
+          'Live Exam Bangladesh',
+          'Board Standard Exam'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/model-tests"
+        breadcrumbs={[{ name: 'অনলাইন মডেল টেস্ট', url: '/model-tests' }]}
+        quizData={{
+          name: 'SSC & HSC Timed Model Examination',
+          description: 'Full-length and chapter-wise timed mock tests for SSC and HSC students.',
+          timeRequired: 'PT30M'
+        }}
+      />
+
       <Breadcrumbs items={[{ label: 'অনলাইন মডেল টেস্ট' }]} navigate={navigate} />
 
       {/* Header */}

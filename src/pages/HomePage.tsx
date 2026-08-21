@@ -36,6 +36,7 @@ import { useBookmarks } from '../context/BookmarkContext';
 import { StudyingBoyAnimation } from '../components/common/StudyingBoyAnimation';
 import { LiveStudentsCounter } from '../components/common/LiveStudentsCounter';
 import { AdBanner } from '../components/common/AdBanner';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface HomePageProps {
   navigate: (to: string) => void;
@@ -92,6 +93,25 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
 
   return (
     <div className="space-y-16 pb-20">
+      <SEOHead
+        title="SSC & HSC Notes, MCQ, PDF Download Free | EduMaster BD"
+        description="বাংলাদেশের SSC ও HSC শিক্ষার্থীদের জন্য ফ্রি নোট, MCQ, PDF, মডেল টেস্ট এবং গুরুত্বপূর্ণ প্রশ্ন।"
+        keywords={[
+          'SSC Notes Bangladesh',
+          'HSC Notes Bangladesh',
+          'SSC MCQ',
+          'HSC MCQ',
+          'PDF Notes',
+          'Board Questions',
+          'Model Test',
+          'EduMaster BD',
+          'SSC 2025 Handnote',
+          'HSC 2025 Suggestion'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/"
+        ogType="website"
+        faqs={faqs.map(f => ({ question: f.q, answer: f.a }))}
+      />
       {/* Top Header Ad Placement */}
       <AdBanner placement="headerTop" navigate={navigate} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2" />
 

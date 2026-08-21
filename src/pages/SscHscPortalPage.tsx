@@ -16,6 +16,7 @@ import { getSubjects, getChapters, getNotes, getMCQs, getPDFs } from '../service
 import { Subject, Chapter, Note, MCQ, PDFResource } from '../types';
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface SscHscPortalPageProps {
   classLevel: 'ssc' | 'hsc';
@@ -61,6 +62,37 @@ export const SscHscPortalPage: React.FC<SscHscPortalPageProps> = ({ classLevel, 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <SEOHead
+        title={`${classLevel.toUpperCase()} সকল বিষয়ের নোট, MCQ ও হ্যান্ডনোট | EduMaster BD`}
+        description={`এসএসসি ও এইচএসসি ${classLevel.toUpperCase()} শিক্ষার্থীদের জন্য পদার্থ, রসায়ন, গণিত, জীববিজ্ঞান ও ICT সহ সকল বিষয়ের অধ্যায়ভিত্তিক নোট, MCQ কুইজ এবং PDF ডাউনলোড।`}
+        keywords={[
+          `${classLevel.toUpperCase()} Notes Bangladesh`,
+          `${classLevel.toUpperCase()} All Subjects`,
+          `${classLevel.toUpperCase()} MCQ Practice`,
+          `${classLevel.toUpperCase()} Physics Note`,
+          `${classLevel.toUpperCase()} Chemistry Handnote`,
+          `${classLevel.toUpperCase()} Math Formula`
+        ]}
+        canonicalUrl={`https://edumasterbd.vercel.app/${classLevel}`}
+        breadcrumbs={[{ name: `${classLevel.toUpperCase()} বিভাগ`, url: `/${classLevel}` }]}
+        courseData={{
+          name: `${classLevel.toUpperCase()} Comprehensive Online Study Hub`,
+          description: `Complete study notes, chapter summaries, formula sheets and MCQ bank for Bangladesh ${classLevel.toUpperCase()} examination.`,
+          provider: 'EduMaster BD',
+          educationalLevel: classLevel.toUpperCase()
+        }}
+        faqs={[
+          {
+            question: `${classLevel.toUpperCase()} বিভাগের কোন কোন বিষয়ের নোট পাওয়া যাবে?`,
+            answer: `বিজ্ঞান, মানবিক ও ব্যবসায় শিক্ষা শাখার পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান, সাধারণ ও উচ্চতর গণিত, ICT, বাংলা এবং ইংরেজি বিষয়ের পূর্ণাঙ্গ নোট পাওয়া যাবে।`
+          },
+          {
+            question: `এখানে কি অধ্যায়ভিত্তিক MCQ টেস্ট দেওয়ার সুযোগ আছে?`,
+            answer: `হ্যাঁ, প্রতিটি বিষয়ের প্রতিটি অধ্যায়ের জন্য আলাদা আলাদা বোর্ড স্ট্যান্ডার্ড বহুনির্বাচনী প্র্যাকটিস সেট রয়েছে।`
+          }
+        ]}
+      />
+
       <Breadcrumbs
         items={[{ label: `${classLevel.toUpperCase()} বিভাগ` }]}
         navigate={navigate}

@@ -22,6 +22,7 @@ import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
 import { useBookmarks } from '../context/BookmarkContext';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface McqPracticePageProps {
   navigate: (to: string) => void;
@@ -119,6 +120,32 @@ export const McqPracticePage: React.FC<McqPracticePageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title="SSC ও HSC অধ্যায়ভিত্তিক MCQ প্র্যাকটিস ও কুইজ সমাধান | EduMaster BD"
+        description="পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান ও ICT সহ এসএসসি ও এইচএসসি পরীক্ষার সকল বিষয়ের অধ্যায়ভিত্তিক বহুনির্বাচনী প্রশ্ন (MCQ) অনুশীলন করুন এবং তাৎক্ষণিক বাংলা ব্যাখ্যা দেখুন।"
+        keywords={[
+          'SSC MCQ Practice',
+          'HSC MCQ Practice',
+          'Online Quiz Bangladesh',
+          'MCQ with explanation',
+          'Physics MCQ',
+          'Chemistry MCQ'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/mcq"
+        breadcrumbs={[{ name: 'MCQ অনুশীলন', url: '/mcq' }]}
+        quizData={{
+          name: 'SSC & HSC Interactive Chapterwise MCQ Assessment',
+          description: 'Practice board standard multiple choice questions with instant explanations and analytics.',
+          timeRequired: 'PT15M'
+        }}
+        faqs={[
+          {
+            question: 'MCQ উত্তর সাবমিট করার পর কি সঠিক উত্তরের ব্যাখ্যা পাওয়া যাবে?',
+            answer: 'হ্যাঁ, প্রতিটি MCQ প্রশ্নের সাথে সাথে বিস্তারিত সমাধান ও সূত্রের প্রয়োগ ব্যাখ্যা হিসেবে দেওয়া থাকে।'
+          }
+        ]}
+      />
+
       <Breadcrumbs items={[{ label: 'MCQ প্র্যাকটিস হাব' }]} navigate={navigate} />
 
       {/* Header */}

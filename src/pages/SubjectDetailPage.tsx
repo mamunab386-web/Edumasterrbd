@@ -23,6 +23,8 @@ import { Subject, Chapter, Note, MCQ, PDFResource, BoardQuestion } from '../type
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
+import { SEOHead } from '../components/common/SEOHead';
+import { RelatedContentLinks } from '../components/common/RelatedContentLinks';
 
 interface SubjectDetailPageProps {
   classLevel: 'ssc' | 'hsc';
@@ -82,6 +84,29 @@ export const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title={`${subject.banglaName} (${subject.name}) ${classLevel.toUpperCase()} সম্পূর্ণ নোট ও MCQ | EduMaster BD`}
+        description={`${classLevel.toUpperCase()} ${subject.banglaName} বিষয়ের সকল অধ্যায়ভিত্তিক হ্যান্ডনোট, থিওরি সামারি, সূত্র তালিকা, MCQ প্র্যাকটিস ও বিগত বছরের বোর্ড প্রশ্ন সমাধান।`}
+        keywords={[
+          `${subject.banglaName} ${classLevel.toUpperCase()}`,
+          `${subject.name} note Bangladesh`,
+          `${subject.name} MCQ practice`,
+          `${subject.name} PDF download`,
+          `${classLevel.toUpperCase()} ${subject.name} suggestion`
+        ]}
+        canonicalUrl={`https://edumasterbd.vercel.app/${classLevel}/${subjectId}`}
+        breadcrumbs={[
+          { name: `${classLevel.toUpperCase()} বিভাগ`, url: `/${classLevel}` },
+          { name: subject.banglaName, url: `/${classLevel}/${subjectId}` }
+        ]}
+        courseData={{
+          name: `${classLevel.toUpperCase()} ${subject.banglaName} (${subject.name})`,
+          description: subject.description,
+          provider: 'EduMaster BD',
+          educationalLevel: classLevel.toUpperCase()
+        }}
+      />
+
       <Breadcrumbs
         items={[
           { label: `${classLevel.toUpperCase()} বিভাগ`, path: `/${classLevel}` },
@@ -338,6 +363,14 @@ export const SubjectDetailPage: React.FC<SubjectDetailPageProps> = ({
           </div>
         </div>
       )}
+
+      {/* Internal Linking Widgets for SEO */}
+      <RelatedContentLinks
+        title={`${subject.banglaName} সম্পর্কিত অন্যান্য রিসোর্স`}
+        relatedNotes={notes}
+        relatedPdfs={pdfs}
+        navigate={navigate}
+      />
     </div>
   );
 };

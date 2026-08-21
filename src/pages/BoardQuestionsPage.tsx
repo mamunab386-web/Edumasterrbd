@@ -14,6 +14,7 @@ import { BoardQuestion, Subject } from '../types';
 import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface BoardQuestionsPageProps {
   navigate: (to: string) => void;
@@ -66,6 +67,26 @@ export const BoardQuestionsPage: React.FC<BoardQuestionsPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title="SSC ও HSC বিগত বছরের সকল বোর্ড প্রশ্ন ও উত্তর সমাধান | EduMaster BD"
+        description="ঢাকা, রাজশাহী, কুমিল্লা, চট্টগ্রাম, যশোর, বরিশাল, সিলেট ও দিনাজপুর বোর্ডের এসএসসি ও এইচএসসি পরীক্ষার বিগত বছরের সৃজনশীল ও বহুনির্বাচনী প্রশ্ন এবং সমাধান।"
+        keywords={[
+          'SSC Board Questions',
+          'HSC Board Question Solution',
+          'Dhaka Board Question',
+          'Board Question Bank Bangladesh',
+          'Previous Year Exam Papers'
+        ]}
+        canonicalUrl="https://edumasterbd.vercel.app/board-questions"
+        breadcrumbs={[{ name: 'বোর্ড প্রশ্ন ব্যাংক', url: '/board-questions' }]}
+        courseData={{
+          name: 'SSC & HSC All Education Boards Question Bank Archive',
+          description: 'Access previous years examination question papers with model answers for all Bangladesh education boards.',
+          provider: 'EduMaster BD',
+          educationalLevel: 'SSC & HSC'
+        }}
+      />
+
       <Breadcrumbs items={[{ label: 'বোর্ড প্রশ্ন ব্যাংক' }]} navigate={navigate} />
 
       {/* Header */}

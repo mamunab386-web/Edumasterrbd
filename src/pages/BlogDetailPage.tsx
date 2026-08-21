@@ -14,6 +14,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
 import { MarkdownRenderer } from '../components/common/MarkdownRenderer';
 import { useToast } from '../context/ToastContext';
+import { SEOHead } from '../components/common/SEOHead';
 
 interface BlogDetailPageProps {
   slug: string;
@@ -57,6 +58,31 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigate }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <SEOHead
+        title={blog.seoTitle || `${blog.title} | EduMaster BD`}
+        description={blog.metaDescription || blog.excerpt || blog.title}
+        keywords={[...(blog.tags || []), 'SSC Blog', 'HSC Routine', 'Exam Strategy']}
+        canonicalUrl={`https://edumasterbd.vercel.app/blog/${blog.slug}`}
+        ogType="article"
+        ogImage={blog.coverImageUrl}
+        publishedTime={blog.createdAt}
+        modifiedTime={blog.updatedAt || blog.createdAt}
+        author={blog.author}
+        breadcrumbs={[
+          { name: 'ব্লগ ও গাইডলাইন', url: '/blog' },
+          { name: blog.title, url: `/blog/${blog.slug}` }
+        ]}
+        articleData={{
+          headline: blog.title,
+          description: blog.excerpt || blog.metaDescription || blog.title,
+          image: blog.coverImageUrl || 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&h=630&q=80',
+          datePublished: blog.createdAt,
+          dateModified: blog.updatedAt || blog.createdAt,
+          authorName: blog.author,
+          section: blog.category
+        }}
+      />
+
       <Breadcrumbs
         items={[
           { label: 'ব্লগ ও গাইডলাইন', path: '/blog' },

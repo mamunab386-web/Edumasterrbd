@@ -9,6 +9,19 @@ async function startServer() {
 
   app.use(express.json({ limit: '10mb' }));
 
+  // Google Search Console Site Verification File route
+  app.get('/googleca963865ef8ae607.html', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.send('google-site-verification: googleca963865ef8ae607.html');
+  });
+
+  // Generic Google Search Console HTML verification handler
+  app.get('/google:code.html', (req, res) => {
+    const code = req.params.code;
+    res.setHeader('Content-Type', 'text/html');
+    res.send(`google-site-verification: google${code}.html`);
+  });
+
   // API Routes
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });

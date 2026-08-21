@@ -82,7 +82,7 @@ export const AdminContentGenerator: React.FC<AdminContentGeneratorProps> = ({ on
     setSubjects(subList);
     setChapters(chapList);
 
-    const sscSubs = subList.filter((s) => s.classLevel === 'ssc');
+    const sscSubs = subList.filter((s) => s.classLevel === 'ssc' || s.classLevel === 'both');
     if (sscSubs.length > 0) {
       setSelectedSubjectId(sscSubs[0].id);
       const chaps = chapList.filter((c) => c.subjectId === sscSubs[0].id);
@@ -102,10 +102,11 @@ export const AdminContentGenerator: React.FC<AdminContentGeneratorProps> = ({ on
 
   const handleClassChange = (lvl: 'ssc' | 'hsc') => {
     setClassLevel(lvl);
-    const filteredSubs = subjects.filter((s) => s.classLevel === lvl);
+    const filteredSubs = subjects.filter((s) => s.classLevel === lvl || s.classLevel === 'both');
     if (filteredSubs.length > 0) {
-      setSelectedSubjectId(filteredSubs[0].id);
-      const chaps = chapters.filter((c) => c.subjectId === filteredSubs[0].id);
+      const firstSub = filteredSubs[0];
+      setSelectedSubjectId(firstSub.id);
+      const chaps = chapters.filter((c) => c.subjectId === firstSub.id);
       setSelectedChapterId(chaps.length > 0 ? chaps[0].id : '');
     } else {
       setSelectedSubjectId('');
@@ -292,7 +293,7 @@ export const AdminContentGenerator: React.FC<AdminContentGeneratorProps> = ({ on
     window.print();
   };
 
-  const filteredSubjects = subjects.filter((s) => s.classLevel === classLevel);
+  const filteredSubjects = subjects.filter((s) => s.classLevel === classLevel || s.classLevel === 'both');
   const filteredChapters = chapters.filter((c) => c.subjectId === selectedSubjectId);
 
   return (

@@ -26,6 +26,7 @@ import { EmptyState } from '../components/common/EmptyState';
 import { MarkdownRenderer } from '../components/common/MarkdownRenderer';
 import { useBookmarks } from '../context/BookmarkContext';
 import { useToast } from '../context/ToastContext';
+import { AdBanner } from '../components/common/AdBanner';
 
 interface NoteDetailPageProps {
   slug: string;
@@ -229,6 +230,11 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({ slug, navigate }
       <article className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200 dark:border-slate-800 shadow-md transition-colors">
         <MarkdownRenderer content={note.content} fontSize={fontSize} />
       </article>
+
+      {/* In-Note Ad Placement */}
+      <div className="print:hidden">
+        <AdBanner placement="inNoteContent" navigate={navigate} />
+      </div>
 
       {/* Next Practice Step CTA */}
       <div className="rounded-2xl p-6 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg print:hidden">

@@ -22,6 +22,7 @@ import { GlassCard } from '../components/common/GlassCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { EmptyState } from '../components/common/EmptyState';
 import { useToast } from '../context/ToastContext';
+import { AdBanner } from '../components/common/AdBanner';
 
 interface TestResultPageProps {
   resultId: string;
@@ -256,6 +257,9 @@ export const TestResultPage: React.FC<TestResultPageProps> = ({ resultId, naviga
           </button>
         </GlassCard>
       </div>
+
+      {/* Test Result Ad Banner Placement */}
+      <AdBanner placement="testResult" navigate={navigate} />
 
       {/* Question-by-Question Detailed Review */}
       {test?.questions && test.questions.length > 0 && (

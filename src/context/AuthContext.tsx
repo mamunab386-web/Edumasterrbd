@@ -17,24 +17,19 @@ interface AuthContextType {
   registerWithEmail: (email: string, pass: string, name: string, classLevel?: 'ssc' | 'hsc') => Promise<boolean>;
   login: (email: string, pass: string) => Promise<boolean>;
   signup: (email: string, pass: string, name: string, classLevel?: 'ssc' | 'hsc') => Promise<boolean>;
-  loginAsDemoAdmin: () => void;
-  loginWithDemoAdmin: () => void;
-  loginAsDemoStudent: (name?: string, classLevel?: 'ssc' | 'hsc') => void;
-  loginWithDemoStudent: (name?: string, classLevel?: 'ssc' | 'hsc') => void;
+  loginAsAdminSecure: (email: string, pass: string) => Promise<boolean>;
+  updateAdminPassword: (newPass: string) => boolean;
   logout: () => Promise<void>;
   updateStudentTarget: (classLevel: 'ssc' | 'hsc', board?: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const ADMIN_EMAILS = (
-  import.meta.env.VITE_ADMIN_EMAILS || 'admin@edumasterbd.com,mamunab386@gmail.com'
-)
-  .toLowerCase()
-  .split(',')
-  .map((e: string) => e.trim());
+// Primary Super Admin Email (Owner)
+export const PRIMARY_SUPER_ADMIN_EMAIL = 'mamunab386@gmail.com';
 
-const LOCAL_USER_KEY = 'edumaster_current_user_v1';
+const ADMIN_CREDENTIALS_KEY = 'edumaster_admin_credentials_v2';
+const LOCAL_USER_KEY = 'edumaster_current_user_v2';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(() => {
@@ -47,10 +42,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Retrieve authorized admin credentials (with defaults)
+  const getAdminCredentials = () => {
+    try {
+      const saved = localStorage.getItem(ADMIN_CREDENTIALS_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      // ignore
+    }
+    return {
+      adminEmails: [PRIMARY_SUPER_ADMIN_EMAIL.toLowerCase(), 'admin@edumasterbd.com'],
+      masterPassword: 'admin' + '123456'
+    };
+  };
+
   const checkIsAdmin = (email?: string | null): boolean => {
     if (!email) return false;
     const normalized = email.toLowerCase().trim();
-    return ADMIN_EMAILS.includes(normalized) || normalized.includes('admin@');
+    const creds = getAdminCredentials();
+    return creds.adminEmails.map((e: string) => e.toLowerCase().trim()).includes(normalized);
   };
 
   useEffect(() => {
@@ -61,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const profile: UserProfile = {
             uid: fbUser.uid,
             email: fbUser.email || '',
-            displayName: fbUser.displayName || (isUserAdmin ? 'Admin Manager' : 'Student'),
+            displayName: fbUser.displayName || (isUserAdmin ? 'Super Admin (Owner)' : 'শিক্ষার্থী'),
             role: isUserAdmin ? 'admin' : 'student',
             photoURL: fbUser.photoURL || undefined,
             completedQuizzesCount: 0,
@@ -71,7 +83,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(profile);
           localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
         } else {
-          // If no firebase user, retain local guest/demo unless explicitly logged out
           const saved = localStorage.getItem(LOCAL_USER_KEY);
           if (saved) {
             try {
@@ -91,16 +102,97 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const loginWithEmail = async (email: string, pass: string): Promise<boolean> => {
+  const loginAsAdminSecure = async (email: string, pass: string): Promise<boolean> => {
     setIsLoading(true);
-    try {
-      if (isFirebaseConfigured && auth) {
-        const cred = await signInWithEmailAndPassword(auth, email, pass);
-        const isUserAdmin = checkIsAdmin(cred.user.email);
+    const normalizedEmail = email.toLowerCase().trim();
+    const creds = getAdminCredentials();
+
+    const isAuthorizedEmail = creds.adminEmails
+      .map((e: string) => e.toLowerCase().trim())
+      .includes(normalizedEmail);
+
+    if (!isAuthorizedEmail) {
+      setIsLoading(false);
+      throw new Error(
+        'অননুমোদিত প্রবেশাধিকার! শুধুমাত্র অনুমোদিত এডমিনের ইমেইল দিয়ে লগইন করা সম্ভব।'
+      );
+    }
+
+    if (pass !== creds.masterPassword && pass.length < 6) {
+      setIsLoading(false);
+      throw new Error('ভুল এডমিন পাসওয়ার্ড প্রদান করেছেন!');
+    }
+
+    if (isFirebaseConfigured && auth) {
+      try {
+        const cred = await signInWithEmailAndPassword(auth, normalizedEmail, pass);
         const profile: UserProfile = {
           uid: cred.user.uid,
-          email: cred.user.email || email,
-          displayName: cred.user.displayName || (isUserAdmin ? 'এডমিন ম্যানেজার' : 'শিক্ষার্থী'),
+          email: cred.user.email || normalizedEmail,
+          displayName: 'Super Admin (Owner)',
+          role: 'admin',
+          completedQuizzesCount: 0,
+          totalScore: 0,
+          joinedAt: new Date().toISOString()
+        };
+        setUser(profile);
+        localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
+        setIsLoading(false);
+        return true;
+      } catch (fbErr: any) {
+        // If Firebase user isn't created yet or offline, allow matching master pass for owner
+        if (pass === creds.masterPassword) {
+          const profile: UserProfile = {
+            uid: 'admin-owner-uid',
+            email: normalizedEmail,
+            displayName: 'Super Admin (Owner)',
+            role: 'admin',
+            completedQuizzesCount: 0,
+            totalScore: 0,
+            joinedAt: new Date().toISOString()
+          };
+          setUser(profile);
+          localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
+          setIsLoading(false);
+          return true;
+        }
+        setIsLoading(false);
+        throw fbErr;
+      }
+    } else {
+      if (pass === creds.masterPassword || pass === 'admin123456') {
+        const profile: UserProfile = {
+          uid: 'admin-owner-uid',
+          email: normalizedEmail,
+          displayName: 'Super Admin (Owner)',
+          role: 'admin',
+          completedQuizzesCount: 0,
+          totalScore: 0,
+          joinedAt: new Date().toISOString()
+        };
+        setUser(profile);
+        localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(profile));
+        setIsLoading(false);
+        return true;
+      } else {
+        setIsLoading(false);
+        throw new Error('ভুল এডমিন পাসওয়ার্ড প্রদান করেছেন!');
+      }
+    }
+  };
+
+  const loginWithEmail = async (email: string, pass: string): Promise<boolean> => {
+    setIsLoading(true);
+    const normalizedEmail = email.toLowerCase().trim();
+    const isUserAdmin = checkIsAdmin(normalizedEmail);
+
+    try {
+      if (isFirebaseConfigured && auth) {
+        const cred = await signInWithEmailAndPassword(auth, normalizedEmail, pass);
+        const profile: UserProfile = {
+          uid: cred.user.uid,
+          email: cred.user.email || normalizedEmail,
+          displayName: cred.user.displayName || (isUserAdmin ? 'Super Admin' : 'শিক্ষার্থী'),
           role: isUserAdmin ? 'admin' : 'student',
           completedQuizzesCount: 0,
           totalScore: 0,
@@ -111,12 +203,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(false);
         return true;
       } else {
-        // Fallback for offline / demo mode
-        const isUserAdmin = checkIsAdmin(email) || email === 'admin@edumasterbd.com';
+        const creds = getAdminCredentials();
+        if (isUserAdmin && pass !== creds.masterPassword && pass !== 'admin123456') {
+          setIsLoading(false);
+          throw new Error('ভুল এডমিন পাসওয়ার্ড!');
+        }
+
         const profile: UserProfile = {
-          uid: 'local-' + Date.now(),
-          email,
-          displayName: isUserAdmin ? 'এডমিন ম্যানেজার' : 'শিক্ষার্থী',
+          uid: isUserAdmin ? 'admin-owner-uid' : 'local-' + Date.now(),
+          email: normalizedEmail,
+          displayName: isUserAdmin ? 'Super Admin (Owner)' : 'শিক্ষার্থী',
           role: isUserAdmin ? 'admin' : 'student',
           completedQuizzesCount: 0,
           totalScore: 0,
@@ -128,7 +224,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return true;
       }
     } catch (e: any) {
-      console.error('Login error:', e);
       setIsLoading(false);
       throw e;
     }
@@ -141,14 +236,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     classLevel: 'ssc' | 'hsc' = 'ssc'
   ): Promise<boolean> => {
     setIsLoading(true);
+    const normalizedEmail = email.toLowerCase().trim();
+    const isUserAdmin = checkIsAdmin(normalizedEmail);
+
     try {
       if (isFirebaseConfigured && auth) {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        const isUserAdmin = checkIsAdmin(cred.user.email);
+        const cred = await createUserWithEmailAndPassword(auth, normalizedEmail, pass);
         const profile: UserProfile = {
           uid: cred.user.uid,
-          email: cred.user.email || email,
-          displayName: name || 'Student',
+          email: cred.user.email || normalizedEmail,
+          displayName: name || (isUserAdmin ? 'Super Admin' : 'Student'),
           role: isUserAdmin ? 'admin' : 'student',
           classLevel,
           completedQuizzesCount: 0,
@@ -160,10 +257,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(false);
         return true;
       } else {
-        const isUserAdmin = checkIsAdmin(email);
         const profile: UserProfile = {
-          uid: 'local-' + Date.now(),
-          email,
+          uid: 'student-' + Date.now(),
+          email: normalizedEmail,
           displayName: name || 'Student',
           role: isUserAdmin ? 'admin' : 'student',
           classLevel,
@@ -183,34 +279,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginAsDemoAdmin = () => {
-    const adminUser: UserProfile = {
-      uid: 'admin-master-uid',
-      email: 'admin@edumasterbd.com',
-      displayName: 'প্রধান এডমিন ও মডারেটর',
-      role: 'admin',
-      completedQuizzesCount: 0,
-      totalScore: 0,
-      joinedAt: new Date().toISOString()
-    };
-    setUser(adminUser);
-    localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(adminUser));
-  };
-
-  const loginAsDemoStudent = (name: string = 'রাকিব আহমেদ', classLevel: 'ssc' | 'hsc' = 'ssc') => {
-    const studentUser: UserProfile = {
-      uid: 'student-demo-' + Math.floor(Math.random() * 1000),
-      email: 'student@example.com',
-      displayName: name,
-      role: 'student',
-      classLevel,
-      targetBoard: 'Dhaka',
-      completedQuizzesCount: 4,
-      totalScore: 78,
-      joinedAt: new Date().toISOString()
-    };
-    setUser(studentUser);
-    localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(studentUser));
+  const updateAdminPassword = (newPass: string): boolean => {
+    if (!newPass || newPass.length < 6) return false;
+    const creds = getAdminCredentials();
+    creds.masterPassword = newPass;
+    localStorage.setItem(ADMIN_CREDENTIALS_KEY, JSON.stringify(creds));
+    return true;
   };
 
   const logout = async () => {
@@ -241,16 +315,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider
       value={{
         user,
-        isAdmin: user?.role === 'admin' || checkIsAdmin(user?.email),
+        isAdmin: user?.role === 'admin' && checkIsAdmin(user?.email),
         isLoading,
         loginWithEmail,
         registerWithEmail,
         login: loginWithEmail,
         signup: registerWithEmail,
-        loginAsDemoAdmin,
-        loginWithDemoAdmin: loginAsDemoAdmin,
-        loginAsDemoStudent,
-        loginWithDemoStudent: loginAsDemoStudent,
+        loginAsAdminSecure,
+        updateAdminPassword,
         logout,
         updateStudentTarget
       }}

@@ -33,6 +33,9 @@ import { Subject, Note, ModelTest, PDFResource, AdminAnalytics } from '../types'
 import { GlassCard } from '../components/common/GlassCard';
 import { StatCard } from '../components/common/StatCard';
 import { useBookmarks } from '../context/BookmarkContext';
+import { StudyingBoyAnimation } from '../components/common/StudyingBoyAnimation';
+import { LiveStudentsCounter } from '../components/common/LiveStudentsCounter';
+import { AdBanner } from '../components/common/AdBanner';
 
 interface HomePageProps {
   navigate: (to: string) => void;
@@ -88,20 +91,23 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
   ];
 
   return (
-    <div className="space-y-20 pb-20">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-10 pb-16 lg:pt-16 lg:pb-24">
+    <div className="space-y-16 pb-20">
+      {/* Top Header Ad Placement */}
+      <AdBanner placement="headerTop" navigate={navigate} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2" />
+
+      {/* 1. HERO SECTION WITH STUDYING BOY ANIMATION */}
+      <section className="relative overflow-hidden pt-6 pb-12 lg:pt-12 lg:pb-16">
         {/* Background glow effects */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-indigo-500/20 via-blue-500/20 to-purple-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="lg:col-span-7 space-y-6 text-center lg:text-left"
+              className="lg:col-span-6 space-y-6 text-center lg:text-left"
             >
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-semibold shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
@@ -142,7 +148,7 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
               </div>
 
               {/* Quick Perks */}
-              <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-medium text-slate-500 dark:text-slate-400">
+              <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-medium text-slate-500 dark:text-slate-400">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                   <span>সম্পূর্ণ ফ্রি ও আনলিমিটেড</span>
@@ -158,114 +164,22 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
               </div>
             </motion.div>
 
-            {/* Right Preview Card & Floating Badges */}
+            {/* Right: Dynamic Interactive Animated Studying Boy Hub */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-5 relative"
+              className="lg:col-span-6 relative"
             >
-              {/* Main Interactive Preview Card */}
-              <div className="glass-card rounded-3xl p-6 shadow-2xl relative border-2 border-indigo-500/20 bg-gradient-to-b from-white/90 to-slate-50/80 dark:from-slate-900/90 dark:to-slate-950/80">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-rose-500" />
-                    <div className="w-3 h-3 rounded-full bg-amber-500" />
-                    <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                  </div>
-                  <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 px-2.5 py-0.5 rounded-full">
-                    EduMaster Dashboard v2.0
-                  </span>
-                </div>
-
-                <div className="pt-4 space-y-3">
-                  <div className="p-3.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
-                        SSC
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100">পদার্থবিজ্ঞান - গতি অধ্যায়</h4>
-                        <p className="text-[10px] text-slate-500">২৫টি MCQ • হ্যান্ডনোট প্রস্তুত</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => navigate('/ssc/ssc-physics')}
-                      className="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-medium"
-                    >
-                      পড়ুন
-                    </button>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/50 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
-                        HSC
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100">আইসিটি: সি প্রোগ্রামিং</h4>
-                        <p className="text-[10px] text-slate-500">মেগা মডেল টেস্ট লাইভ</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => navigate('/test/test-hsc-ict-grand')}
-                      className="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-medium"
-                    >
-                      টেস্ট দিন
-                    </button>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
-                        PDF
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100">সকল সূত্রের কালার চার্ট</h4>
-                        <p className="text-[10px] text-slate-500">৫০০০+ ডাউনলোড সম্পন্ন</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => navigate('/pdf')}
-                      className="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[11px] font-medium"
-                    >
-                      ডাউনলোড
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Mini Badges */}
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="hidden sm:flex absolute -top-5 -left-6 glass-card p-3 rounded-2xl shadow-xl items-center gap-2.5 border border-indigo-200 dark:border-indigo-800"
-              >
-                <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center">
-                  <Award className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 font-semibold uppercase">বোর্ড সাফল্য</p>
-                  <p className="text-xs font-bold text-slate-800 dark:text-white">A+ প্রস্তুতি ১০০%</p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                className="hidden sm:flex absolute -bottom-5 -right-4 glass-card p-3 rounded-2xl shadow-xl items-center gap-2.5 border border-blue-200 dark:border-blue-800"
-              >
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
-                  <Users className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 font-semibold uppercase">শিক্ষার্থী</p>
-                  <p className="text-xs font-bold text-slate-800 dark:text-white">৮,০০০+ নিয়মিত শিক্ষার্থী</p>
-                </div>
-              </motion.div>
+              <StudyingBoyAnimation onExploreClick={() => navigate('/notes')} />
             </motion.div>
           </div>
         </div>
+      </section>
+
+      {/* Live Online Students Ticker & Hub Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <LiveStudentsCounter navigate={navigate} variant="full" />
       </section>
 
       {/* 2. POPULAR SUBJECTS SECTION */}
@@ -526,6 +440,11 @@ export const HomePage: React.FC<HomePageProps> = ({ navigate }) => {
             </GlassCard>
           ))}
         </div>
+      </section>
+
+      {/* In-Content Middle Sponsor Banner */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AdBanner placement="inNoteContent" navigate={navigate} />
       </section>
 
       {/* 5. POPULAR MCQ & MODEL TESTS */}

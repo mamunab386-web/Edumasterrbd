@@ -14,6 +14,7 @@ import { AdminPdfManager } from './AdminPdfManager';
 import { AdminPdfNotesManager } from './AdminPdfNotesManager';
 import { AdminBoardQuestionManager } from './AdminBoardQuestionManager';
 import { AdminBlogManager } from './AdminBlogManager';
+import { AdminAdsManager } from './AdminAdsManager';
 import { AdminSettings } from './AdminSettings';
 import { AdminLoginPage } from './AdminLoginPage';
 
@@ -44,6 +45,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
       {currentTab === 'pdfs' && <AdminPdfNotesManager />}
       {currentTab === 'board' && <AdminBoardQuestionManager />}
       {currentTab === 'blogs' && <AdminBlogManager />}
+      {currentTab === 'ads' && <AdminAdsManager />}
       {currentTab === 'settings' && <AdminSettings />}
     </AdminLayout>
   );

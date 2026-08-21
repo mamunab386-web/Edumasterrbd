@@ -5,6 +5,7 @@ import { BookmarkProvider } from './context/BookmarkContext';
 import { ToastProvider } from './context/ToastContext';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import { AdBanner } from './components/common/AdBanner';
 
 // Pages
 import { HomePage } from './pages/HomePage';
@@ -170,6 +171,7 @@ function AppContent() {
       <Navbar currentPath={pathOnly} navigate={navigate} />
       <main className="flex-1 w-full">{renderRoute()}</main>
       {!isAdminView && <Footer navigate={navigate} />}
+      {!isAdminView && <AdBanner placement="stickyFooter" navigate={navigate} />}
     </div>
   );
 }

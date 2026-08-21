@@ -12,7 +12,8 @@ import {
   LogOut,
   ChevronRight,
   ShieldCheck,
-  Home
+  Home,
+  Megaphone
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -49,6 +50,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     { id: 'subjects', label: 'বিষয়সমূহ (Subjects)', icon: Layers },
     { id: 'chapters', label: 'অধ্যায়সমূহ (Chapters)', icon: BookOpen },
     { id: 'blogs', label: 'ব্লগ ও গাইডলাইন', icon: BookOpen },
+    { id: 'ads', label: 'বিজ্ঞাপন ও মনিটাইজেশন', icon: Megaphone, badge: 'NEW' },
     { id: 'settings', label: 'সেটিংস ও ডেটাবেজ', icon: Settings }
   ];
 

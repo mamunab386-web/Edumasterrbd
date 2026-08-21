@@ -23,6 +23,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useBookmarks } from '../../context/BookmarkContext';
 import { motion, AnimatePresence } from 'motion/react';
+import { LiveStudentsCounter } from './LiveStudentsCounter';
 
 interface NavbarProps {
   currentPath: string;
@@ -113,8 +114,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, navigate }) => {
             ))}
           </nav>
 
-          {/* Action Tools (Search, Bookmarks, Theme, Auth, Admin) */}
+          {/* Action Tools (Search, Bookmarks, Theme, Auth, Admin, Live Counter) */}
           <div className="flex items-center gap-2">
+            {/* Live Students Realtime Counter Badge */}
+            <LiveStudentsCounter navigate={navigate} variant="badge" />
+
             {/* Global Search Button */}
             <button
               onClick={() => navigate('/search')}

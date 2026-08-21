@@ -331,3 +331,47 @@ export interface BookmarkItem {
   link: string;
   savedAt: string;
 }
+
+export type AdNetworkType = 'adsense' | 'custom_banner' | 'html_code';
+
+export interface SingleAdPlacement {
+  id: string;
+  name: string;
+  banglaName: string;
+  locationDescription: string;
+  recommendedSize: string;
+  enabled: boolean;
+  type: AdNetworkType;
+  adsenseSlotId?: string;
+  htmlCode?: string;
+  customBanner?: {
+    imageUrl: string;
+    targetUrl: string;
+    altText: string;
+    caption?: string;
+  };
+}
+
+export interface AdSettings {
+  globalEnabled: boolean;
+  testMode: boolean;
+  adsenseClientId: string;
+  autoAdsEnabled: boolean;
+  customHeaderScript?: string;
+  placements: {
+    headerTop: SingleAdPlacement;
+    sidebar: SingleAdPlacement;
+    inNoteContent: SingleAdPlacement;
+    testResult: SingleAdPlacement;
+    stickyFooter: SingleAdPlacement;
+  };
+}
+
+export interface LiveStudyRoom {
+  id: string;
+  name: string;
+  banglaName: string;
+  studentCount: number;
+  icon: string;
+  category: 'ssc' | 'hsc' | 'general';
+}

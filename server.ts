@@ -1,0 +1,159 @@
+import express from 'express';
+import path from 'path';
+import { createServer as createViteServer } from 'vite';
+import { GoogleGenAI } from '@google/genai';
+
+async function startServer() {
+  const app = express();
+  const PORT = 3000;
+
+  app.use(express.json({ limit: '10mb' }));
+
+  // API Routes
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
+  // Gemini API Curriculum Content Generation Endpoint with Multi-Model Fallback & Retry
+  app.post('/api/curriculum/generate', async (req, res) => {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(200).json({
+        success: false,
+        error: 'GEMINI_API_KEY is not configured on server',
+        fallbackNeeded: true
+      });
+    }
+
+    const {
+      classLevel = 'ssc',
+      subjectName = 'বিজ্ঞান',
+      chapterTitle = 'সাধারণ অধ্যায়',
+      contentType = 'hand_note',
+      difficulty = 'medium',
+      mcqCount = 10,
+      language = 'bangla',
+      customTopic = '',
+      board = 'সকল বোর্ড স্পেশাল'
+    } = req.body;
+
+    const prompt = `You are a distinguished national academic author, professor, and NCTB curriculum specialist for Bangladeshi Secondary (SSC) and Higher Secondary (HSC) education.
+Generate comprehensive, 100% accurate, highly educational content tailored specifically for Bangladeshi students.
+
+ACADEMIC SPECIFICATIONS:
+- Class / Academic Tier: ${classLevel.toUpperCase()} (Bangladeshi National Curriculum)
+- Subject: ${subjectName}
+- Target Chapter: ${chapterTitle}
+- Content Format / Type: ${contentType}
+- Difficulty Level: ${difficulty} (easy = basic foundation, medium = board standard, hard = advanced board topper & admission)
+- Primary Language: ${language} (Natural, high-clarity Bengali with standard English scientific terms in brackets where helpful)
+- MCQ Question Count (if applicable): ${mcqCount}
+- Focus Topic / Sub-unit: ${customTopic || chapterTitle}
+- Board Target / Exam Year: ${board} (SSC/HSC 2025-2026 Curriculum)
+
+STRICT REQUIREMENTS BY CONTENT TYPE:
+1. If content type is "hand_note" (পূর্ণাঙ্গ হ্যান্ডনোট):
+   Structure your response with clear Markdown headers:
+   # [Engaging & Formal Bangla Title matching ${subjectName}: ${chapterTitle}]
+   > **শ্রেণী:** ${classLevel.toUpperCase()} | **বিষয়:** ${subjectName} | **অধ্যায়:** ${chapterTitle} | **বোর্ড টার্গেট:** ${board}
+
+   ## ১. শিখনফল (Learning Outcomes)
+   ## ২. ভূমিকা ও প্রাথমিক ধারণা (Introduction & Core Concepts)
+   ## ৩. গুরুত্বপূর্ণ পরিভাষা ও সংজ্ঞা (Key Definitions with Scientific Precision)
+   ## ৪. বিস্তারিত মূল পাঠ ও তাত্ত্বিক বিশ্লেষণ (Deep Dive & Subject-Specific Mechanics)
+   ## ৫. প্রয়োজনীয় সূত্র, সমীকরণ ও নিয়মের তালিকা (Key Formulas, Chemical Reactions, Biological Processes or Grammar Rules with clear explanations and SI units)
+   ## ৬. বাস্তব উদাহরণ, গাণিতিক/সৃজনশীল সমস্যা ও সমাধান (Real Examples with step-by-step solutions)
+   ## ৭. সাধারণ ভুল ও সতর্কতা (Common Traps & Student Mistakes in Board Exams)
+   ## ৮. বোর্ড পরীক্ষার টপ সিক্রেট টিপস ও শর্টকাট কৌশল (Exam Shortcuts & High-Scoring Tips)
+   ## ৯. একনজরে দ্রুত রিভিশন চার্ট (Quick Revision Table/Summary)
+   ## ১০. অধ্যায়ের সমাপ্তি ও চূড়ান্ত বার্তা (Key Takeaways)
+
+2. If content type is "mcq_set" or "model_test" (MCQ প্রশ্ন ব্যাংক):
+   Generate exactly ${mcqCount} unique, high-yield board standard multiple choice questions specifically for ${subjectName} - ${chapterTitle}.
+   For EACH question:
+   - Provide the question in clear Bengali.
+   - Provide 4 distinct options: (ক), (খ), (গ), (ঘ).
+   - Provide the Correct Answer (ক/খ/গ/ঘ).
+   - Provide a detailed mathematical/scientific/logical explanation why that answer is correct.
+
+3. If content type is "formula_sheet" (সূত্র শিট):
+   Create a complete, beautifully structured Markdown table listing all laws, equations, reactions, or rules for ${subjectName} - ${chapterTitle}, with variables defined, SI units, and shortcut application tricks.
+
+4. If content type is "important_questions" (সৃজনশীল ও ক/খ প্রশ্ন):
+   Generate board-standard জ্ঞানমূলক (ক), অনুধাবনমূলক (খ), প্রয়োগমূলক (গ) ও উচ্চতর দক্ষতা (ঘ) questions with model solutions, past board exam citations, and 5-star importance ratings.
+
+Please ensure the content strictly matches ${subjectName} and ${chapterTitle} and does not genericize into unrelated subjects. Return pristine Markdown.`;
+
+    const candidateModels = ['gemini-3.7-flash', 'gemini-flash-latest', 'gemini-3.1-flash-lite'];
+    let generatedText = '';
+    let lastError: any = null;
+
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build'
+        }
+      }
+    });
+
+    // Try candidate models in order with resilience
+    for (const model of candidateModels) {
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents: prompt
+        });
+
+        if (response && response.text && response.text.trim().length > 30) {
+          generatedText = response.text;
+          break; // Success!
+        }
+      } catch (err: any) {
+        lastError = err;
+        console.warn(`Model ${model} temporarily unavailable (${err?.status || err?.message}), attempting fallback...`);
+        // Brief pause before fallback attempt
+        await new Promise((resolve) => setTimeout(resolve, 400));
+      }
+    }
+
+    if (generatedText) {
+      return res.json({
+        success: true,
+        content: generatedText,
+        title: customTopic || `${classLevel.toUpperCase()} ${subjectName}: ${chapterTitle} — বিশেষ প্রস্তুতি ও গাইড`,
+        summary: `${classLevel.toUpperCase()} ${subjectName} বিষয়ের ${chapterTitle} অধ্যায়ের পূর্ণাঙ্গ প্রস্তুতি ও বিশ্লেষণ।`,
+        tags: [classLevel.toUpperCase(), subjectName, chapterTitle, contentType]
+      });
+    }
+
+    // Graceful fallback response so the client smoothly generates high-quality content without breaking
+    console.warn('Gemini models temporarily busy, signaling client to use domain curriculum engine.');
+    return res.status(200).json({
+      success: false,
+      error: lastError?.message || 'Gemini model is currently experiencing high demand',
+      fallbackNeeded: true
+    });
+  });
+
+  // Vite middleware for development vs static build in production
+  if (process.env.NODE_ENV !== 'production') {
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: 'spa'
+    });
+    app.use(vite.middlewares);
+  } else {
+    const distPath = path.join(process.cwd(), 'dist');
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  }
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`EduMaster BD Server running on http://0.0.0.0:${PORT}`);
+  });
+}
+
+startServer();

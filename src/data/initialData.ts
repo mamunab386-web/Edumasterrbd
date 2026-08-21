@@ -10,7 +10,8 @@ import {
   BoardQuestion,
   BlogArticle,
   PlatformSettings,
-  AdminAnalytics
+  AdminAnalytics,
+  AdSettings
 } from '../types';
 
 export const INITIAL_SUBJECTS: Subject[] = [
@@ -188,21 +189,76 @@ export const INITIAL_CHAPTERS: Chapter[] = [
   { id: 'ch-ssc-chem-3', title: 'Structure of Matter', banglaTitle: '৩য় অধ্যায়: পদার্থের গঠন', chapterNumber: 3, subjectId: 'ssc-chemistry', classLevel: 'ssc', order: 1 },
   { id: 'ch-ssc-chem-4', title: 'Periodic Table', banglaTitle: '৪র্থ অধ্যায়: পর্যায় সারণি', chapterNumber: 4, subjectId: 'ssc-chemistry', classLevel: 'ssc', order: 2 },
   { id: 'ch-ssc-chem-5', title: 'Chemical Bonds', banglaTitle: '৫ম অধ্যায়: রাসায়নিক বন্ধন', chapterNumber: 5, subjectId: 'ssc-chemistry', classLevel: 'ssc', order: 3 },
+  { id: 'ch-ssc-chem-6', title: 'Concept of Mole & Chemical Calculations', banglaTitle: '৬ষ্ঠ অধ্যায়: মোলের ধারণা ও রাসায়নিক গণনা', chapterNumber: 6, subjectId: 'ssc-chemistry', classLevel: 'ssc', order: 4 },
+  { id: 'ch-ssc-chem-7', title: 'Chemical Reactions', banglaTitle: '৭ম অধ্যায়: রাসায়নিক বিক্রিয়া', chapterNumber: 7, subjectId: 'ssc-chemistry', classLevel: 'ssc', order: 5 },
+  { id: 'ch-ssc-chem-11', title: 'Mineral Resources: Fossils', banglaTitle: '১১তম অধ্যায়: খনিজ সম্পদ: জীবাশ্ম ও হাইড্রোকার্বন', chapterNumber: 11, subjectId: 'ssc-chemistry', classLevel: 'ssc', order: 6 },
 
-  // SSC Math
+  // SSC Biology
+  { id: 'ch-ssc-bio-1', title: 'Lessons on Life', banglaTitle: '১ম অধ্যায়: জীবন পাঠ (Lesson on Life)', chapterNumber: 1, subjectId: 'ssc-biology', classLevel: 'ssc', order: 1 },
+  { id: 'ch-ssc-bio-2', title: 'Cells & Tissues', banglaTitle: '২য় অধ্যায়: জীবকোষ ও টিস্যু', chapterNumber: 2, subjectId: 'ssc-biology', classLevel: 'ssc', order: 2 },
+  { id: 'ch-ssc-bio-3', title: 'Cell Division', banglaTitle: '৩য় অধ্যায়: কোষ বিভাজন', chapterNumber: 3, subjectId: 'ssc-biology', classLevel: 'ssc', order: 3 },
+  { id: 'ch-ssc-bio-4', title: 'Bio-energetics', banglaTitle: '৪র্থ অধ্যায়: জীবনীশক্তি (সালোকসংশ্লেষণ ও শ্বসন)', chapterNumber: 4, subjectId: 'ssc-biology', classLevel: 'ssc', order: 4 },
+  { id: 'ch-ssc-bio-12', title: 'Heredity & Evolution', banglaTitle: '১২তম অধ্যায়: জীবের বংশগতি ও বিবর্তন', chapterNumber: 12, subjectId: 'ssc-biology', classLevel: 'ssc', order: 5 },
+
+  // SSC General Math
   { id: 'ch-ssc-math-2', title: 'Sets & Functions', banglaTitle: '২য় অধ্যায়: সেট ও ফাংশন', chapterNumber: 2, subjectId: 'ssc-math', classLevel: 'ssc', order: 1 },
   { id: 'ch-ssc-math-3', title: 'Algebraic Expressions', banglaTitle: '৩য় অধ্যায়: বীজগাণিতিক রাশি', chapterNumber: 3, subjectId: 'ssc-math', classLevel: 'ssc', order: 2 },
   { id: 'ch-ssc-math-9', title: 'Trigonometry Ratio', banglaTitle: '৯ম অধ্যায়: ত্রিকোণমিতিক অনুপাত', chapterNumber: 9, subjectId: 'ssc-math', classLevel: 'ssc', order: 3 },
+  { id: 'ch-ssc-math-16', title: 'Mensuration', banglaTitle: '১৬তম অধ্যায়: পরিমিতি (ক্ষেত্রফল ও আয়তন)', chapterNumber: 16, subjectId: 'ssc-math', classLevel: 'ssc', order: 4 },
+  { id: 'ch-ssc-math-17', title: 'Statistics', banglaTitle: '১৭তম অধ্যায়: পরিসংখ্যান (গড়, মধ্যক, প্রচুরক)', chapterNumber: 17, subjectId: 'ssc-math', classLevel: 'ssc', order: 5 },
+
+  // SSC Higher Math
+  { id: 'ch-ssc-hm-1', title: 'Set & Functions', banglaTitle: '১ম অধ্যায়: সেট ও ফাংশন', chapterNumber: 1, subjectId: 'ssc-higher-math', classLevel: 'ssc', order: 1 },
+  { id: 'ch-ssc-hm-2', title: 'Algebraic Expression', banglaTitle: '২য় অধ্যায়: বীজগণিতীয় রাশি', chapterNumber: 2, subjectId: 'ssc-higher-math', classLevel: 'ssc', order: 2 },
+  { id: 'ch-ssc-hm-8', title: 'Trigonometry', banglaTitle: '৮ম অধ্যায়: ত্রিকোণমিতি (রেডিয়ান ও কোণ)', chapterNumber: 8, subjectId: 'ssc-higher-math', classLevel: 'ssc', order: 3 },
+  { id: 'ch-ssc-hm-11', title: 'Coordinate Geometry', banglaTitle: '১১তম অধ্যায়: স্থানাঙ্ক জ্যামিতি ও ঢাল', chapterNumber: 11, subjectId: 'ssc-higher-math', classLevel: 'ssc', order: 4 },
+  { id: 'ch-ssc-hm-14', title: 'Probability', banglaTitle: '১৪তম অধ্যায়: সম্ভাবনা (Probability)', chapterNumber: 14, subjectId: 'ssc-higher-math', classLevel: 'ssc', order: 5 },
+
+  // SSC ICT
+  { id: 'ch-ssc-ict-1', title: 'ICT & Our Bangladesh', banglaTitle: '১ম অধ্যায়: তথ্য ও যোগাযোগ প্রযুক্তি এবং আমাদের বাংলাদেশ', chapterNumber: 1, subjectId: 'ssc-ict', classLevel: 'ssc', order: 1 },
+  { id: 'ch-ssc-ict-2', title: 'Computer & Security', banglaTitle: '২য় অধ্যায়: কম্পিউটার ও ব্যবহারকারীর নিরাপত্তা', chapterNumber: 2, subjectId: 'ssc-ict', classLevel: 'ssc', order: 2 },
+  { id: 'ch-ssc-ict-4', title: 'Spreadsheet & Word', banglaTitle: '৪র্থ অধ্যায়: আমার লেখালেখি ও হিসাব (স্প্রেডশিট)', chapterNumber: 4, subjectId: 'ssc-ict', classLevel: 'ssc', order: 3 },
+
+  // SSC Bangla
+  { id: 'ch-ssc-ban-1', title: 'Bangla Prose', banglaTitle: 'গদ্যাংশ: শোভা, মানুষ মুহম্মদ (স:) ও নিমগাছ', chapterNumber: 1, subjectId: 'ssc-bangla', classLevel: 'ssc', order: 1 },
+  { id: 'ch-ssc-ban-2', title: 'Bangla Poetry', banglaTitle: 'পদ্যাংশ: বঙ্গবাণী, কপোতাক্ষ নদ ও পল্লিজননী', chapterNumber: 2, subjectId: 'ssc-bangla', classLevel: 'ssc', order: 2 },
+  { id: 'ch-ssc-ban-3', title: 'Bangla Grammar', banglaTitle: 'ব্যাকরণ: সমাস, সন্ধি, কারক ও বাক্য রূপান্তর', chapterNumber: 3, subjectId: 'ssc-bangla', classLevel: 'ssc', order: 3 },
+
+  // SSC English
+  { id: 'ch-ssc-eng-1', title: 'Right Form of Verbs', banglaTitle: 'Unit 1: Right Form of Verbs & Subject-Verb Agreement', chapterNumber: 1, subjectId: 'ssc-english', classLevel: 'ssc', order: 1 },
+  { id: 'ch-ssc-eng-2', title: 'Transformation & Voice', banglaTitle: 'Unit 2: Transformation of Sentences & Voice Change', chapterNumber: 2, subjectId: 'ssc-english', classLevel: 'ssc', order: 2 },
+  { id: 'ch-ssc-eng-3', title: 'Comprehension & Summary', banglaTitle: 'Unit 3: Reading Passage Comprehension & Theme Writing', chapterNumber: 3, subjectId: 'ssc-english', classLevel: 'ssc', order: 3 },
 
   // HSC Physics
-  { id: 'ch-hsc-phy-vec', title: 'Vectors', banglaTitle: '২য় অধ্যায়: ভেক্টর (Vectors)', chapterNumber: 2, subjectId: 'hsc-physics', classLevel: 'hsc', order: 1 },
-  { id: 'ch-hsc-phy-newton', title: 'Newtonian Mechanics', banglaTitle: '৪র্থ অধ্যায়: নিউটনিয়ান বলবিদ্যা', chapterNumber: 4, subjectId: 'hsc-physics', classLevel: 'hsc', order: 2 },
+  { id: 'ch-hsc-phy-vec', title: 'Vectors', banglaTitle: '২য় অধ্যায়: ভেক্টর (Vectors & Cross/Dot Product)', chapterNumber: 2, subjectId: 'hsc-physics', classLevel: 'hsc', order: 1 },
+  { id: 'ch-hsc-phy-newton', title: 'Newtonian Mechanics', banglaTitle: '৪র্থ অধ্যায়: নিউটনিয়ান বলবিদ্যা ও ঘর্ষন', chapterNumber: 4, subjectId: 'hsc-physics', classLevel: 'hsc', order: 2 },
   { id: 'ch-hsc-phy-work', title: 'Work, Energy & Power', banglaTitle: '৫ম অধ্যায়: কাজ, শক্তি ও ক্ষমতা', chapterNumber: 5, subjectId: 'hsc-physics', classLevel: 'hsc', order: 3 },
-  { id: 'ch-hsc-phy-thermo', title: 'Thermodynamics', banglaTitle: '১ম অধ্যায় (২য় পত্র): তাপগতিবিদ্যা', chapterNumber: 1, subjectId: 'hsc-physics', classLevel: 'hsc', order: 4 },
-  { id: 'ch-hsc-phy-curr', title: 'Current Electricity', banglaTitle: '৩য় অধ্যায় (২য় পত্র): চল তড়িৎ', chapterNumber: 3, subjectId: 'hsc-physics', classLevel: 'hsc', order: 5 },
+  { id: 'ch-hsc-phy-thermo', title: 'Thermodynamics', banglaTitle: '১ম অধ্যায় (২য় পত্র): তাপগতিবিদ্যা ও এন্ট্রপি', chapterNumber: 1, subjectId: 'hsc-physics', classLevel: 'hsc', order: 4 },
+  { id: 'ch-hsc-phy-curr', title: 'Current Electricity', banglaTitle: '৩য় অধ্যায় (২য় পত্র): চল তড়িৎ ও কার্শফের সূত্র', chapterNumber: 3, subjectId: 'hsc-physics', classLevel: 'hsc', order: 5 },
+
+  // HSC Chemistry
+  { id: 'ch-hsc-chem-1', title: 'Qualitative Chemistry', banglaTitle: '২য় অধ্যায় (১ম পত্র): গুণগত রসায়ন (কোয়ান্টাম সংখ্যা ও দ্রাব্যতা)', chapterNumber: 2, subjectId: 'hsc-chemistry', classLevel: 'hsc', order: 1 },
+  { id: 'ch-hsc-chem-2', title: 'Periodic Trends & Chemical Bonds', banglaTitle: '৩য় অধ্যায় (১ম পত্র): মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন', chapterNumber: 3, subjectId: 'hsc-chemistry', classLevel: 'hsc', order: 2 },
+  { id: 'ch-hsc-chem-3', title: 'Chemical Changes', banglaTitle: '৪র্থ অধ্যায় (১ম পত্র): রাসায়নিক পরিবর্তন (লা শাতেলিয়ের নীতি ও pH)', chapterNumber: 4, subjectId: 'hsc-chemistry', classLevel: 'hsc', order: 3 },
+  { id: 'ch-hsc-chem-4', title: 'Organic Chemistry', banglaTitle: '২য় অধ্যায় (২য় পত্র): জৈব রসায়ন (অ্যালকেন, অ্যালকিন ও পলিমার)', chapterNumber: 2, subjectId: 'hsc-chemistry', classLevel: 'hsc', order: 4 },
+  { id: 'ch-hsc-chem-5', title: 'Quantitative Chemistry', banglaTitle: '৩য় অধ্যায় (২য় পত্র): পরিমাণগত রসায়ন (মোলারিটি ও টাইট্রেশন)', chapterNumber: 3, subjectId: 'hsc-chemistry', classLevel: 'hsc', order: 5 },
+
+  // HSC Biology
+  { id: 'ch-hsc-bio-1', title: 'Cell & Structure', banglaTitle: '১ম অধ্যায় (১ম পত্র): কোষ ও এর গঠন (DNA/RNA)', chapterNumber: 1, subjectId: 'hsc-biology', classLevel: 'hsc', order: 1 },
+  { id: 'ch-hsc-bio-2', title: 'Cell Division', banglaTitle: '২য় অধ্যায় (১ম পত্র): কোষ বিভাজন (মায়োসিস ও ক্রসিং ওভার)', chapterNumber: 2, subjectId: 'hsc-biology', classLevel: 'hsc', order: 2 },
+  { id: 'ch-hsc-bio-3', title: 'Plant Physiology', banglaTitle: '৯ম অধ্যায় (১ম পত্র): উদ্ভিদ শারীরতত্ত্ব (ক্যালভিন চক্র ও শ্বসন)', chapterNumber: 9, subjectId: 'hsc-biology', classLevel: 'hsc', order: 3 },
+  { id: 'ch-hsc-bio-4', title: 'Blood & Circulation', banglaTitle: '৪র্থ অধ্যায় (২য় পত্র): রক্ত ও সংবহন (হৃদপিণ্ড ও রক্তচাপ)', chapterNumber: 4, subjectId: 'hsc-biology', classLevel: 'hsc', order: 4 },
+  { id: 'ch-hsc-bio-5', title: 'Genetics & Evolution', banglaTitle: '১১তম অধ্যায় (২য় পত্র): জিনতত্ত্ব ও বিবর্তন (মেন্ডেলের সূত্র)', chapterNumber: 11, subjectId: 'hsc-biology', classLevel: 'hsc', order: 5 },
+
+  // HSC Higher Math
+  { id: 'ch-hsc-hm-1', title: 'Matrices & Determinants', banglaTitle: '১ম অধ্যায় (১ম পত্র): ম্যাট্রিক্স ও নির্ণায়ক', chapterNumber: 1, subjectId: 'hsc-higher-math', classLevel: 'hsc', order: 1 },
+  { id: 'ch-hsc-hm-3', title: 'Straight Lines', banglaTitle: '৩য় অধ্যায় (১ম পত্র): সরলরেখা (Straight Lines)', chapterNumber: 3, subjectId: 'hsc-higher-math', classLevel: 'hsc', order: 2 },
+  { id: 'ch-hsc-hm-9', title: 'Differentiation', banglaTitle: '৯ম অধ্যায় (১ম পত্র): অন্তরীকরণ (Calculus - Differentiation)', chapterNumber: 9, subjectId: 'hsc-higher-math', classLevel: 'hsc', order: 3 },
+  { id: 'ch-hsc-hm-10', title: 'Integration', banglaTitle: '১০ম অধ্যায় (১ম পত্র): যোগজীকরণ (Calculus - Integration)', chapterNumber: 10, subjectId: 'hsc-higher-math', classLevel: 'hsc', order: 4 },
+  { id: 'ch-hsc-hm-2nd-6', title: 'Conics', banglaTitle: '৬ষ্ঠ অধ্যায় (২য় পত্র): কণিক (পরাবৃত্ত, উপবৃত্ত, অধিবৃত্ত)', chapterNumber: 6, subjectId: 'hsc-higher-math', classLevel: 'hsc', order: 5 },
 
   // HSC ICT
-  { id: 'ch-hsc-ict-3', title: 'Number Systems & Digital Logic', banglaTitle: '৩য় অধ্যায়: সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস', chapterNumber: 3, subjectId: 'hsc-ict', classLevel: 'hsc', order: 1 },
+  { id: 'ch-hsc-ict-3', title: 'Number Systems & Digital Logic', banglaTitle: '৩য় অধ্যায়: সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস (লজিক গেইট)', chapterNumber: 3, subjectId: 'hsc-ict', classLevel: 'hsc', order: 1 },
   { id: 'ch-hsc-ict-4', title: 'Web Design & HTML', banglaTitle: '৪র্থ অধ্যায়: ওয়েব ডিজাইন পরিচিতি এবং HTML', chapterNumber: 4, subjectId: 'hsc-ict', classLevel: 'hsc', order: 2 },
   { id: 'ch-hsc-ict-5', title: 'C Programming', banglaTitle: '৫ম অধ্যায়: প্রোগ্রামিং ভাষা (C Programming)', chapterNumber: 5, subjectId: 'hsc-ict', classLevel: 'hsc', order: 3 }
 ];
@@ -893,3 +949,94 @@ export const INITIAL_ANALYTICS: AdminAnalytics = {
     { id: 'act-5', type: 'blog', description: 'ব্লগ প্রকাশিত হয়েছে: SSC পরীক্ষায় জিপিএ ৫ পাওয়ার রুটিন', timestamp: '৫ ঘণ্টা আগে' }
   ]
 };
+
+export const INITIAL_AD_SETTINGS: AdSettings = {
+  globalEnabled: true,
+  testMode: true,
+  adsenseClientId: 'ca-pub-9876543210123456',
+  autoAdsEnabled: false,
+  customHeaderScript: '',
+  placements: {
+    headerTop: {
+      id: 'headerTop',
+      name: 'Header Top Leaderboard',
+      banglaName: 'হেডার টপ ব্যানার',
+      locationDescription: 'ওয়েবসাইটের সবার উপরে ন্যাভবারের নিচে দৃশ্যমান ব্যানার',
+      recommendedSize: '728x90 (Desktop) / 320x50 (Mobile)',
+      enabled: true,
+      type: 'custom_banner',
+      adsenseSlotId: '1234567890',
+      customBanner: {
+        imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&auto=format&fit=crop&q=80',
+        targetUrl: '/test',
+        altText: 'SSC ও HSC মেগা মডেল টেস্ট ২০২৫ — সম্পূর্ণ ফ্রি রেজিস্ট্রেশন',
+        caption: 'স্পন্সরড: EduMaster মেগা মডেল টেস্টে অংশ নিন ও প্রাইজ জিতুন!'
+      }
+    },
+    inNoteContent: {
+      id: 'inNoteContent',
+      name: 'In-Article / Handnote Content',
+      banglaName: 'হ্যান্ডনোট ও পড়ার মাঝের অ্যাড',
+      locationDescription: 'শিক্ষার্থীদের পড়ার সময় অনুচ্ছেদের মাঝামাঝি ন্যাচারাল অ্যাড',
+      recommendedSize: 'Responsive / 336x280 Large Rectangle',
+      enabled: true,
+      type: 'custom_banner',
+      adsenseSlotId: '2345678901',
+      customBanner: {
+        imageUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1000&auto=format&fit=crop&q=80',
+        targetUrl: '/pdf',
+        altText: 'সকল বিষয়ের ১০০% সেরা বোর্ড সাজেশন ও ফর্মুলা বুকলেট PDF',
+        caption: 'প্রস্তুতি জোরদার করুন: সেরা ফর্মুলা শিট ও সাজেশন ডাউনলোড করুন'
+      }
+    },
+    sidebar: {
+      id: 'sidebar',
+      name: 'Sidebar Medium Rectangle',
+      banglaName: 'সাইডবার ব্যানার অ্যাড',
+      locationDescription: 'ডেস্কটপ ও ল্যাপটপে সাইডবারের গুরুত্বপূর্ণ অংশে',
+      recommendedSize: '300x250 Medium Rectangle / 300x600 Half Page',
+      enabled: true,
+      type: 'custom_banner',
+      adsenseSlotId: '3456789012',
+      customBanner: {
+        imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&auto=format&fit=crop&q=80',
+        targetUrl: '/mcq',
+        altText: 'অনলাইন লাইভ কুইজ ও প্রশ্নব্যাংক',
+        caption: 'প্রতিদিনের কুইজ দিয়ে নিজের অবস্থান যাচাই করুন'
+      }
+    },
+    testResult: {
+      id: 'testResult',
+      name: 'Quiz / Model Test Result Ad',
+      banglaName: 'মডেল টেস্ট রেজাল্ট পেজ অ্যাড',
+      locationDescription: 'টেস্ট শেষ হওয়ার পর শিক্ষার্থীর স্কোরকার্ডের সাথে প্রদর্শিত বিজ্ঞাপন',
+      recommendedSize: '728x90 Leaderboard / 336x280 Large Rectangle',
+      enabled: true,
+      type: 'custom_banner',
+      adsenseSlotId: '4567890123',
+      customBanner: {
+        imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1000&auto=format&fit=crop&q=80',
+        targetUrl: '/board-questions',
+        altText: 'বিগত ৫ বছরের সকল বোর্ড প্রশ্নের ব্যাখ্যাসহ নির্ভুল সমাধান',
+        caption: 'পরবর্তী ধাপ: বিগত বছরের বোর্ড প্রশ্ন প্র্যাকটিস করুন'
+      }
+    },
+    stickyFooter: {
+      id: 'stickyFooter',
+      name: 'Sticky Floating Footer',
+      banglaName: 'স্টিকি ফ্লোটিং ফুটার অ্যাড',
+      locationDescription: 'স্ক্রিনের নিচে ফিক্সড থাকা রেসপনসিভ ব্যানার যা ইউজার চাইলে ক্রস দিতে পারে',
+      recommendedSize: '728x90 (Desktop) / 320x50 (Mobile)',
+      enabled: true,
+      type: 'custom_banner',
+      adsenseSlotId: '5678901234',
+      customBanner: {
+        imageUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200&auto=format&fit=crop&q=80',
+        targetUrl: '/hsc',
+        altText: 'HSC ও SSC মেগা রিভিশন ব্যাচ ২০২৫',
+        caption: '🎯 HSC বিজ্ঞান ও মানবিক বিভাগের স্পেশাল রিভিশন নোটস'
+      }
+    }
+  }
+};
+

@@ -11,7 +11,8 @@ import {
   BoardQuestion,
   BlogArticle,
   PlatformSettings,
-  AdminAnalytics
+  AdminAnalytics,
+  AdSettings
 } from '../types';
 import {
   INITIAL_SUBJECTS,
@@ -25,7 +26,8 @@ import {
   INITIAL_BOARD_QUESTIONS,
   INITIAL_BLOGS,
   INITIAL_SETTINGS,
-  INITIAL_ANALYTICS
+  INITIAL_ANALYTICS,
+  INITIAL_AD_SETTINGS
 } from '../data/initialData';
 import { db, isFirebaseConfigured } from '../lib/firebase';
 import {
@@ -53,6 +55,7 @@ const STORAGE_KEYS = {
   BOARD_QUESTIONS: 'edumaster_board_questions_v1',
   BLOGS: 'edumaster_blogs_v1',
   SETTINGS: 'edumaster_settings_v1',
+  ADS: 'edumaster_ads_v1',
   ANALYTICS: 'edumaster_analytics_v1',
   BOOKMARKS: 'edumaster_bookmarks_v1',
   VIEW_HISTORY: 'edumaster_view_history_v1',
@@ -93,11 +96,23 @@ export const getSubjects = async (): Promise<Subject[]> => {
       console.warn('Firestore fallback to local for subjects:', e);
     }
   }
-  return getLocal<Subject[]>(STORAGE_KEYS.SUBJECTS, INITIAL_SUBJECTS);
+  const cached = getLocal<Subject[]>(STORAGE_KEYS.SUBJECTS, INITIAL_SUBJECTS);
+  // Ensure all initial subjects exist
+  const existingIds = new Set(cached.map((s) => s.id));
+  const merged = [...cached];
+  for (const s of INITIAL_SUBJECTS) {
+    if (!existingIds.has(s.id)) {
+      merged.push(s);
+    }
+  }
+  if (merged.length !== cached.length) {
+    setLocal(STORAGE_KEYS.SUBJECTS, merged);
+  }
+  return merged;
 };
 
 export const saveSubject = async (subject: Subject): Promise<Subject> => {
-  const current = getLocal<Subject[]>(STORAGE_KEYS.SUBJECTS, INITIAL_SUBJECTS);
+  const current = await getSubjects();
   const index = current.findIndex((s) => s.id === subject.id);
   let updated: Subject[];
   if (index >= 0) {
@@ -119,7 +134,7 @@ export const saveSubject = async (subject: Subject): Promise<Subject> => {
 };
 
 export const deleteSubject = async (subjectId: string): Promise<void> => {
-  const current = getLocal<Subject[]>(STORAGE_KEYS.SUBJECTS, INITIAL_SUBJECTS);
+  const current = await getSubjects();
   setLocal(
     STORAGE_KEYS.SUBJECTS,
     current.filter((s) => s.id !== subjectId)
@@ -146,11 +161,23 @@ export const getChapters = async (): Promise<Chapter[]> => {
       console.warn('Firestore fallback to local for chapters:', e);
     }
   }
-  return getLocal<Chapter[]>(STORAGE_KEYS.CHAPTERS, INITIAL_CHAPTERS);
+  const cached = getLocal<Chapter[]>(STORAGE_KEYS.CHAPTERS, INITIAL_CHAPTERS);
+  // Ensure all newly added initial chapters exist
+  const existingIds = new Set(cached.map((c) => c.id));
+  const merged = [...cached];
+  for (const c of INITIAL_CHAPTERS) {
+    if (!existingIds.has(c.id)) {
+      merged.push(c);
+    }
+  }
+  if (merged.length !== cached.length) {
+    setLocal(STORAGE_KEYS.CHAPTERS, merged);
+  }
+  return merged;
 };
 
 export const saveChapter = async (chapter: Chapter): Promise<Chapter> => {
-  const current = getLocal<Chapter[]>(STORAGE_KEYS.CHAPTERS, INITIAL_CHAPTERS);
+  const current = await getChapters();
   const index = current.findIndex((c) => c.id === chapter.id);
   let updated: Chapter[];
   if (index >= 0) {
@@ -777,6 +804,33 @@ export const savePlatformSettings = async (settings: PlatformSettings): Promise<
   return settings;
 };
 
+// ----------------- AD SETTINGS -----------------
+export const getAdSettings = async (): Promise<AdSettings> => {
+  if (isFirebaseConfigured && db) {
+    try {
+      const snap = await getDoc(doc(db, 'settings', 'ads'));
+      if (snap.exists()) {
+        return snap.data() as AdSettings;
+      }
+    } catch (e) {
+      console.warn('Firestore fallback for ad settings:', e);
+    }
+  }
+  return getLocal<AdSettings>(STORAGE_KEYS.ADS, INITIAL_AD_SETTINGS);
+};
+
+export const saveAdSettings = async (settings: AdSettings): Promise<AdSettings> => {
+  setLocal(STORAGE_KEYS.ADS, settings);
+  if (isFirebaseConfigured && db) {
+    try {
+      await setDoc(doc(db, 'settings', 'ads'), settings);
+    } catch (e) {
+      console.error('Firestore saveAdSettings error:', e);
+    }
+  }
+  return settings;
+};
+
 export const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
   const subjects = await getSubjects();
   const chapters = await getChapters();
@@ -920,7 +974,8 @@ export const exportDatabaseAsJSON = async (): Promise<string> => {
     pdfs,
     boardQuestions,
     blogs,
-    settings
+    settings,
+    ads
   ] = await Promise.all([
     getSubjects(),
     getChapters(),
@@ -932,7 +987,8 @@ export const exportDatabaseAsJSON = async (): Promise<string> => {
     getPDFs(),
     getBoardQuestions(),
     getBlogs(),
-    getPlatformSettings()
+    getPlatformSettings(),
+    getAdSettings()
   ]);
 
   const payload = {
@@ -950,7 +1006,8 @@ export const exportDatabaseAsJSON = async (): Promise<string> => {
       pdfs,
       boardQuestions,
       blogs,
-      settings
+      settings,
+      ads
     }
   };
 
@@ -995,6 +1052,7 @@ export const importDatabaseFromJSON = async (jsonString: string): Promise<boolea
     if (d.boardQuestions) setLocal(STORAGE_KEYS.BOARD_QUESTIONS, d.boardQuestions);
     if (d.blogs) setLocal(STORAGE_KEYS.BLOGS, d.blogs);
     if (d.settings) setLocal(STORAGE_KEYS.SETTINGS, d.settings);
+    if (d.ads) setLocal(STORAGE_KEYS.ADS, d.ads);
     return true;
   } catch (e) {
     console.error('Import database failed:', e);
@@ -1015,6 +1073,7 @@ export const resetToSampleData = (): void => {
   setLocal(STORAGE_KEYS.BOARD_QUESTIONS, INITIAL_BOARD_QUESTIONS);
   setLocal(STORAGE_KEYS.BLOGS, INITIAL_BLOGS);
   setLocal(STORAGE_KEYS.SETTINGS, INITIAL_SETTINGS);
+  setLocal(STORAGE_KEYS.ADS, INITIAL_AD_SETTINGS);
   setLocal(STORAGE_KEYS.ANALYTICS, INITIAL_ANALYTICS);
 };
 

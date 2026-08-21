@@ -18,6 +18,7 @@ import {
   Clock,
   Coffee
 } from 'lucide-react';
+import { presenceService } from '../../services/presenceService';
 
 interface StudyingBoyAnimationProps {
   liveStudentCount?: number;
@@ -26,7 +27,7 @@ interface StudyingBoyAnimationProps {
 }
 
 export const StudyingBoyAnimation: React.FC<StudyingBoyAnimationProps> = ({
-  liveStudentCount = 428,
+  liveStudentCount,
   className = '',
   onExploreClick
 }) => {
@@ -34,6 +35,7 @@ export const StudyingBoyAnimation: React.FC<StudyingBoyAnimationProps> = ({
   const [isLampOn, setIsLampOn] = useState(true);
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [soundType, setSoundType] = useState<'rain' | 'lofi' | 'waves'>('rain');
+  const [realActiveCount, setRealActiveCount] = useState<number>(1);
   
   // Pomodoro Mini Study Timer
   const [pomodoroRunning, setPomodoroRunning] = useState(false);
@@ -43,6 +45,18 @@ export const StudyingBoyAnimation: React.FC<StudyingBoyAnimationProps> = ({
   // Audio Context Ref for synthetic soothing study sounds
   const audioCtxRef = useRef<AudioContext | null>(null);
   const oscillatorNodesRef = useRef<{ source: AudioNode; gain: GainNode }[]>([]);
+
+  // Subscribe to real active users
+  useEffect(() => {
+    const unsubscribe = presenceService.subscribe((stats) => {
+      setRealActiveCount(stats.totalActive);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const displayCount = liveStudentCount !== undefined ? liveStudentCount : realActiveCount;
 
   // Pomodoro Timer tick
   useEffect(() => {
@@ -179,7 +193,7 @@ export const StudyingBoyAnimation: React.FC<StudyingBoyAnimationProps> = ({
           <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <span>লাইভ স্টাডি স্পেস</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 font-extrabold">
-              {liveStudentCount} জন শিক্ষার্থী যুক্ত
+              {displayCount} জন শিক্ষার্থী যুক্ত
             </span>
           </div>
         </div>
